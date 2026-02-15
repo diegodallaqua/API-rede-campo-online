@@ -1,0 +1,11 @@
+DELETE   http://127.0.0.1:3308/addresses/1
+Content-Type: application/json
+
+{
+  "city_id": 2,
+  "street": "Avenida Mineira",
+  "neighborhood": "Bela Vista",
+  "number": 1578,
+  "cep": "01310-200",
+  "complement": "Sala 301"
+}

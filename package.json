@@ -1,0 +1,55 @@
+{
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "celebrate": "^15.0.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.16.1",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0",
+    "typeorm": "^0.3.28"
+  },
+  "name": "api-rede-campo-online",
+  "version": "1.0.0",
+  "description": "API da plataforma Rede Campo Online, um site responsivo voltado ao grupo de pesquisa Rede Campo.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only --respawn --clear src/server.ts",
+
+    "typeorm": "node -r dotenv/config -r ts-node/register ./node_modules/typeorm/cli.js",
+    
+    "migration:generate": "npm run typeorm -- migration:generate src/shared/infra/typeorm/migrations/Init -d src/shared/infra/database/data-source.ts",
+
+    "migration:run": "npm run typeorm -- migration:run -d src/shared/infra/database/data-source.ts",
+
+    "migration:revert": "npm run typeorm -- migration:revert -d src/shared/infra/database/data-source.ts",
+
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegodallaqua/API-rede-campo-online.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diegodallaqua/API-rede-campo-online/issues"
+  },
+  "homepage": "https://github.com/diegodallaqua/API-rede-campo-online#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.9",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
