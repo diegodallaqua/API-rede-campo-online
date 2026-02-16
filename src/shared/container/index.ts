@@ -2,3 +2,6 @@ import "./providers";
 import "../../modules/states/container";
 import "../../modules/cities/container";
 import "../../modules/addresses/container";
+import "../../modules/organizations/container";
+import "../../modules/memberRoles/container";
+import "../../modules/members/container";

@@ -2,7 +2,6 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "celebrate": "^15.0.3",
-    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -22,15 +21,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --respawn --clear src/server.ts",
-
     "typeorm": "node -r dotenv/config -r ts-node/register ./node_modules/typeorm/cli.js",
-    
     "migration:generate": "npm run typeorm -- migration:generate src/shared/infra/typeorm/migrations/Init -d src/shared/infra/database/data-source.ts",
-
     "migration:run": "npm run typeorm -- migration:run -d src/shared/infra/database/data-source.ts",
-
     "migration:revert": "npm run typeorm -- migration:revert -d src/shared/infra/database/data-source.ts",
-
     "lint": "eslint \"src/**/*.ts\"",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -46,6 +40,7 @@
   },
   "homepage": "https://github.com/diegodallaqua/API-rede-campo-online#readme",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.9",
