@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isAuthenticated } from "../../../../shared/infra/http/middlewares/isAuthenticated";
 import { celebrate, Joi, Segments } from "celebrate";
 
 import { CreateAddressController } from "../controllers/CreateAddressController";
@@ -14,19 +15,6 @@ const listController = new ListAddressesController();
 const updateController = new UpdateAddressController();
 const deleteController = new DeleteAddressController();
 
-addressesRoutes.get(
-  "/",
-  celebrate({
-    [Segments.QUERY]: Joi.object({
-      search: Joi.string().trim().min(1).max(150).optional(),
-      city_id: Joi.number().integer().positive().optional(),
-      page: Joi.number().integer().min(1).optional(),
-      take: Joi.number().integer().min(1).max(100).optional(),
-    }),
-  }),
-  listController.handle
-);
-
 addressesRoutes.post(
   "/",
   celebrate({
@@ -40,6 +28,21 @@ addressesRoutes.post(
     }),
   }),
   createController.handle
+);
+
+addressesRoutes.use(isAuthenticated);
+
+addressesRoutes.get(
+  "/",
+  celebrate({
+    [Segments.QUERY]: Joi.object({
+      search: Joi.string().trim().min(1).max(150).optional(),
+      city_id: Joi.number().integer().positive().optional(),
+      page: Joi.number().integer().min(1).optional(),
+      take: Joi.number().integer().min(1).max(100).optional(),
+    }),
+  }),
+  listController.handle
 );
 
 addressesRoutes.put(

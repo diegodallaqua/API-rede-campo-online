@@ -50,6 +50,15 @@ export interface ICreateMemberDTO {
   password?: string | null;
 }
 
+export type MemberAuthPayload = {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  memberRole: { id: number; name: string };
+  organization: { id: number; name: string; logo: string; address_id: number };
+};
+
 export interface IUpdateMemberDTO extends ICreateMemberDTO {
   id: number;
 }
@@ -65,4 +74,5 @@ export interface IMemberRepository {
   update(data: IUpdateMemberDTO): Promise<void>;
   delete(id: number): Promise<void>;
   existsById(id: number): Promise<boolean>;
+  findByEmailWithPassword(email: string): Promise<MemberAuthPayload | null>;
 }

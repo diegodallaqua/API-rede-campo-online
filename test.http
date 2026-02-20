@@ -1,15 +1,7 @@
-DELETE  http://127.0.0.1:3308/members/1
+GET  http://127.0.0.1:3308/addresses
 Content-Type: application/json
-
+Authorization: Bearer 
 {
-  "member_role_id": 1,
-  "organization_id": 1,
-  "name": "VAI DE VALA",
-  "email": "diego@exemplo.com",
-  "cpf": "123.456.789-09",
-  "description": "Pesquisador do grupo.",
-  "lattes_url": "https://lattes.cnpq.br/123",
-  "linked_in_url": "https://linkedin.com/in/diego",
-  "profile_picture": "/uploads/diego.png",
-  "password": "SenhaForte123"
-}  
+  "email": "adm@gmail.com",
+  "password": "senha123"
+}

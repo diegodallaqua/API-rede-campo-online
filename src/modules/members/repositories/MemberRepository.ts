@@ -8,6 +8,7 @@ import {
   PaginateParams,
   MembersPaginateProperties,
   MemberListItem,
+  MemberAuthPayload
 } from "./IMemberRepository";
 
 export class MemberRepository implements IMemberRepository {
@@ -92,7 +93,7 @@ export class MemberRepository implements IMemberRepository {
         "m.linked_in_url as m_linked_in_url",
         "m.profile_picture as m_profile_picture",
 
-        "r.id as r_id",        // ✅ NOVO
+        "r.id as r_id",   
         "r.name as r_name",
 
         "o.id as o_id",
@@ -163,5 +164,45 @@ export class MemberRepository implements IMemberRepository {
 
   async delete(id: number): Promise<void> {
     await this.ormRepo.delete({ id });
+  }
+
+  async findByEmailWithPassword(email: string): Promise<MemberAuthPayload | null> {
+    const raw = await this.ormRepo
+      .createQueryBuilder("m")
+      .innerJoin("m.memberRole", "r")
+      .innerJoin("m.organization", "o")
+      .addSelect("m.password")
+      .select([
+        "m.id as m_id",
+        "m.name as m_name",
+        "m.email as m_email",
+        "m.password as m_password",
+
+        "r.id as r_id",
+        "r.name as r_name",
+
+        "o.id as o_id",
+        "o.name as o_name",
+        "o.logo as o_logo",
+        "o.address_id as o_address_id",
+      ])
+      .where("m.email = :email", { email })
+      .getRawOne();
+
+    if (!raw) return null;
+
+    return {
+      id: Number(raw.m_id),
+      name: raw.m_name,
+      email: raw.m_email,
+      password: raw.m_password,
+      memberRole: { id: Number(raw.r_id), name: raw.r_name },
+      organization: {
+        id: Number(raw.o_id),
+        name: raw.o_name,
+        logo: raw.o_logo,
+        address_id: Number(raw.o_address_id),
+      },
+    };
   }
 }

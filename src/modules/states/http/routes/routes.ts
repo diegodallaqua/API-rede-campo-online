@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isAuthenticated } from "../../../../shared/infra/http/middlewares/isAuthenticated";
 import { celebrate, Joi, Segments } from "celebrate";
 
 import { CreateStateController } from "../controllers/CreateStateController";
@@ -26,6 +27,8 @@ statesRoutes.get(
   }),
   listController.handle
 );
+
+statesRoutes.use(isAuthenticated);
 
 statesRoutes.post(
   "/",

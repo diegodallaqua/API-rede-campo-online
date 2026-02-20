@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { celebrate, Joi, Segments } from "celebrate";
+import { isAuthenticated } from "../../../../shared/infra/http/middlewares/isAuthenticated";
 
 import { CreateOrganizationController } from "../controllers/CreateOrganizationController";
 import { ListOrganizationsController } from "../controllers/ListOrganizationsController";
@@ -37,6 +38,8 @@ organizationsRoutes.post(
   }),
   createController.handle
 );
+
+organizationsRoutes.use(isAuthenticated);
 
 organizationsRoutes.put(
   "/:id",
