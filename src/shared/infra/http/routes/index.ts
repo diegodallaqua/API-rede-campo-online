@@ -8,6 +8,7 @@ import { addressesRoutes } from "../../../../modules/addresses/http/routes/route
 import { organizationsRoutes } from "../../../../modules/organizations/http/routes/routes";
 import { memberRolesRoutes } from "../../../../modules/memberRoles/http/routes/routes";
 import { membersRoutes } from "../../../../modules/members/http/routes/routes";
+import { projectTypesRoutes } from "../../../../modules/projectTypes/http/routes/routes";
 
 export const routes = Router();
 
@@ -21,3 +22,4 @@ routes.use("/addresses", addressesRoutes);
 routes.use("/organizations", organizationsRoutes);
 routes.use("/member-roles", memberRolesRoutes);
 routes.use("/members", membersRoutes);
+routes.use("/project-types", projectTypesRoutes);

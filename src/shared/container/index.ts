@@ -5,3 +5,4 @@ import "../../modules/addresses/container";
 import "../../modules/organizations/container";
 import "../../modules/memberRoles/container";
 import "../../modules/members/container";
+import "../../modules/projectTypes/container";

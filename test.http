@@ -1,7 +1,7 @@
-GET  http://127.0.0.1:3308/addresses
+GET   http://127.0.0.1:3308/project-types
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoxLCJvcmdhbml6YXRpb25faWQiOjEsImlhdCI6MTc3MjUwOTM1MiwiZXhwIjoxNzcyNTk1NzUyLCJzdWIiOiIyIn0.nUzeV5x42xQ85UtQLfVQOMLhyQoFIF6oNdkQ7dtjw90
+
 {
-  "email": "adm@gmail.com",
-  "password": "senha123"
+  "name": "Projeto de Extensão"
 }
