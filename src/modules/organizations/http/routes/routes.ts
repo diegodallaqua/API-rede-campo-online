@@ -14,6 +14,8 @@ const listController = new ListOrganizationsController();
 const updateController = new UpdateOrganizationController();
 const deleteController = new DeleteOrganizationController();
 
+organizationsRoutes.use(isAuthenticated);
+
 organizationsRoutes.get(
   "/",
   celebrate({
@@ -38,8 +40,6 @@ organizationsRoutes.post(
   }),
   createController.handle
 );
-
-organizationsRoutes.use(isAuthenticated);
 
 organizationsRoutes.put(
   "/:id",

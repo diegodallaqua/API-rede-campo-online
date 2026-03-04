@@ -9,7 +9,7 @@ import {
 import { Address } from "../../addresses/entities/Address";
 
 @Entity("organization")
-@Index(["name"], { unique: true })
+@Index(["name"], { unique: false })
 @Index(["address_id"])
 export class Organization {
   @PrimaryGeneratedColumn()

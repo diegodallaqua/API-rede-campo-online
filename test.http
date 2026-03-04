@@ -1,7 +1,18 @@
-GET   http://127.0.0.1:3308/project-types
+DELETE    http://127.0.0.1:3308/projects/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoxLCJvcmdhbml6YXRpb25faWQiOjEsImlhdCI6MTc3MjUwOTM1MiwiZXhwIjoxNzcyNTk1NzUyLCJzdWIiOiIyIn0.nUzeV5x42xQ85UtQLfVQOMLhyQoFIF6oNdkQ7dtjw90
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoxLCJvcmdhbml6YXRpb25faWQiOjEsImlhdCI6MTc3MjU4MTg1MiwiZXhwIjoxNzcyNjY4MjUyLCJzdWIiOiIyIn0.0BEdMwYepL46OhX28q9SoKW8rw6Jy2WVE4EA01oFQ-E
+
+//{
+//  "email": "adm@gmail.com",
+//  "password": "senha123"
+//}
 
 {
-  "name": "Projeto de Extensão"
+  "project_type_id": 1,
+  "name": "Projeto Vendo meu Peixe",
+  "description": "Projeto de desenvolvimento do Aplicativo Vendo meu Peixe",
+  "status": false,
+  "begin_date": "2023-01-01",
+  "end_date": "2025-01-01",
+  "external_staff": null
 }
