@@ -21,8 +21,6 @@ projectsRoutes.get(
   celebrate({
     [Segments.QUERY]: Joi.object({
       project_name: Joi.string().trim().min(1).max(180).optional(),
-      project_type_id: Joi.number().integer().positive().optional(),
-      project_type_name: Joi.string().trim().min(1).max(180).optional(),
       status: Joi.boolean().optional(),
 
       page: Joi.number().integer().min(1).optional(),

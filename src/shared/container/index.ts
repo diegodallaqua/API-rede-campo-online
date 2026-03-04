@@ -7,3 +7,4 @@ import "../../modules/memberRoles/container";
 import "../../modules/members/container";
 import "../../modules/projectTypes/container";
 import "../../modules/projects/container";
+import "../../modules/projectMedias/container";

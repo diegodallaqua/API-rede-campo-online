@@ -48,7 +48,6 @@ export class ProjectRepository implements IProjectRepository {
     skip,
     take,
     project_name,
-    project_type_id,
     status,
   }: PaginateParams): Promise<ProjectsPaginateProperties> {
     const qb = this.ormRepo
@@ -72,10 +71,6 @@ export class ProjectRepository implements IProjectRepository {
     const pname = project_name?.trim();
     if (pname) {
       qb.andWhere("p.name LIKE :pname", { pname: `%${pname}%` });
-    }
-
-    if (project_type_id) {
-      qb.andWhere("p.project_type_id = :tid", { tid: project_type_id });
     }
 
     if (typeof status === "boolean") {

@@ -4,7 +4,6 @@ export type PaginateParams = {
   take: number;
 
   project_name?: string;
-  project_type_id?: number;
   status?: boolean;
 };
 

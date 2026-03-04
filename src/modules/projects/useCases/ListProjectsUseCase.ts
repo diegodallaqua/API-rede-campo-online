@@ -6,8 +6,6 @@ type IRequest = {
   take: number;
 
   project_name?: string;
-  project_type_id?: number;
-  project_type_name?: string;
   status?: boolean;
 };
 
@@ -30,7 +28,6 @@ export class ListProjectsUseCase {
       skip,
       take: safeTake,
       project_name: params.project_name,
-      project_type_id: params.project_type_id,
       status: params.status,
     });
   }

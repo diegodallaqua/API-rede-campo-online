@@ -6,9 +6,6 @@ export class ListProjectsController {
   async handle(req: Request, res: Response): Promise<Response> {
     const project_name = typeof req.query.project_name === "string" ? req.query.project_name : undefined;
 
-    const project_type_id =
-      typeof req.query.project_type_id === "string" ? Number(req.query.project_type_id) : undefined;
-
     const status =
       typeof req.query.status === "string"
         ? req.query.status === "true"
@@ -29,7 +26,6 @@ export class ListProjectsController {
       page,
       take,
       project_name,
-      project_type_id,
       status,
     });
 

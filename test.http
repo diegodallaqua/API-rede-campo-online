@@ -1,18 +1,9 @@
-DELETE    http://127.0.0.1:3308/projects/2
+DELETE http://127.0.0.1:3308/project-media/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoxLCJvcmdhbml6YXRpb25faWQiOjEsImlhdCI6MTc3MjU4MTg1MiwiZXhwIjoxNzcyNjY4MjUyLCJzdWIiOiIyIn0.0BEdMwYepL46OhX28q9SoKW8rw6Jy2WVE4EA01oFQ-E
-
-//{
-//  "email": "adm@gmail.com",
-//  "password": "senha123"
-//}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlX2lkIjoxLCJvcmdhbml6YXRpb25faWQiOjEsImlhdCI6MTc3MjY0MDkzNCwiZXhwIjoxNzcyNzI3MzM0LCJzdWIiOiIyIn0.ZO1h2zLRkXYCV931uDP1edkdKqQnfeWelsQ3rdnAR48
 
 {
-  "project_type_id": 1,
-  "name": "Projeto Vendo meu Peixe",
-  "description": "Projeto de desenvolvimento do Aplicativo Vendo meu Peixe",
-  "status": false,
-  "begin_date": "2023-01-01",
-  "end_date": "2025-01-01",
-  "external_staff": null
+  "project_id": "2",
+  "name": "Foto 2 do Aplicativo",
+  "media": "https://br.freepik.com/fotos-gratis/pescador-segurando-o-peixe-na-mao-no-fundo-desfocado_3089673.htm#fromView=search&page=1&position=24&uuid=7160bb5e-141b-4c9f-8d89-6c5eca246868&query=fish"
 }
