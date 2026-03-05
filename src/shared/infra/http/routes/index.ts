@@ -12,6 +12,7 @@ import { projectTypesRoutes } from "../../../../modules/projectTypes/http/routes
 import { projectsRoutes } from "../../../../modules/projects/http/routes/routes";
 import { projectMediaRoutes } from "../../../../modules/projectMedias/http/routes/routes";
 import { eventsRoutes } from "../../../../modules/events/http/routes/routes";
+import { eventMediaRoutes } from "../../../../modules/eventMedias/http/routes/routes";
 
 export const routes = Router();
 
@@ -29,3 +30,4 @@ routes.use("/project-types", projectTypesRoutes);
 routes.use("/projects", projectsRoutes);
 routes.use("/project-media", projectMediaRoutes);
 routes.use("/events", eventsRoutes);
+routes.use("/event-media", eventMediaRoutes);
