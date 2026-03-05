@@ -11,6 +11,7 @@ import { membersRoutes } from "../../../../modules/members/http/routes/routes";
 import { projectTypesRoutes } from "../../../../modules/projectTypes/http/routes/routes";
 import { projectsRoutes } from "../../../../modules/projects/http/routes/routes";
 import { projectMediaRoutes } from "../../../../modules/projectMedias/http/routes/routes";
+import { eventsRoutes } from "../../../../modules/events/http/routes/routes";
 
 export const routes = Router();
 
@@ -27,3 +28,4 @@ routes.use("/members", membersRoutes);
 routes.use("/project-types", projectTypesRoutes);
 routes.use("/projects", projectsRoutes);
 routes.use("/project-media", projectMediaRoutes);
+routes.use("/events", eventsRoutes);
