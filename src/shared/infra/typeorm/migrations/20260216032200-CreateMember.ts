@@ -19,7 +19,6 @@ export class CreateMembers20260216032200 implements MigrationInterface {
 
           { name: "name", type: "varchar", length: "160", isNullable: false },
           { name: "email", type: "varchar", length: "180", isNullable: false },
-          { name: "cpf", type: "varchar", length: "11", isNullable: false },
           { name: "description", type: "varchar", length: "600", isNullable: false },
 
           { name: "lattes_url", type: "varchar", length: "255", isNullable: true },
@@ -58,11 +57,6 @@ export class CreateMembers20260216032200 implements MigrationInterface {
     await queryRunner.createIndex(
       "member",
       new TableIndex({ name: "IDX_members_email_unique", columnNames: ["email"], isUnique: true })
-    );
-
-    await queryRunner.createIndex(
-      "member",
-      new TableIndex({ name: "IDX_members_cpf_unique", columnNames: ["cpf"], isUnique: true })
     );
   }
 

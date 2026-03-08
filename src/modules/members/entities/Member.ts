@@ -10,7 +10,6 @@ import { MemberRole } from "../../memberRoles/entities/MemberRole";
 import { Organization } from "../../organizations/entities/Organization";
 
 @Entity("member")
-@Index(["cpf"], { unique: true })
 @Index(["email"], { unique: true })
 export class Member {
   @PrimaryGeneratedColumn()
@@ -35,9 +34,6 @@ export class Member {
 
   @Column({ type: "varchar", length: 180 })
   email!: string;
-
-  @Column({ type: "varchar", length: 11, unique: true })
-  cpf!: string;
 
   @Column({ type: "varchar", length: 600 })
   description!: string;

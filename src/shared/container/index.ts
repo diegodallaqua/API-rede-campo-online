@@ -10,3 +10,4 @@ import "../../modules/projects/container";
 import "../../modules/projectMedias/container";
 import "../../modules/events/container";
 import "../../modules/eventMedias/container";
+import "../../modules/news/container";

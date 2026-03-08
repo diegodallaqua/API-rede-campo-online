@@ -25,14 +25,8 @@ export class CreateMemberUseCase {
     const org = await this.organizationRepository.findById(data.organization_id);
     if (!org) throw new AppError("Organization not found", 404, "ORG_NOT_FOUND");
 
-    const cpf = data.cpf.replace(/\D/g, "");
-    if (cpf.length !== 11) throw new AppError("Invalid CPF format", 400, "INVALID_CPF");
-
     const email = data.email.trim().toLowerCase();
     const name = data.name.trim();
-
-    const cpfExists = await this.memberRepository.findByCpf(cpf);
-    if (cpfExists) throw new AppError("CPF already in use", 409, "CPF_CONFLICT");
 
     const emailExists = await this.memberRepository.findByEmail(email);
     if (emailExists) throw new AppError("Email already in use", 409, "EMAIL_CONFLICT");
@@ -46,7 +40,6 @@ export class CreateMemberUseCase {
       ...data,
       name,
       email,
-      cpf,
       description: data.description.trim(),
       lattes_url: data.lattes_url?.trim() ?? null,
       linked_in_url: data.linked_in_url?.trim() ?? null,

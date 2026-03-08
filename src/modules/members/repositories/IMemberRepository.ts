@@ -11,7 +11,6 @@ export type MemberListItem = {
   id: number;
   name: string;
   email: string;
-  cpf: string;
   description: string;
   lattes_url: string | null;
   linked_in_url: string | null;
@@ -42,7 +41,6 @@ export interface ICreateMemberDTO {
   organization_id: number;
   name: string;
   email: string;
-  cpf: string;
   description: string;
   lattes_url?: string | null;
   linked_in_url?: string | null;
@@ -68,7 +66,6 @@ export interface IMemberRepository {
   findAll(params: PaginateParams): Promise<MembersPaginateProperties>;
   findByIdWithRelations(id: number): Promise<MemberListItem | null>;
 
-  findByCpf(cpf: string): Promise<{ id: number; cpf: string } | null>;
   findByEmail(email: string): Promise<{ id: number; email: string } | null>;
 
   update(data: IUpdateMemberDTO): Promise<void>;

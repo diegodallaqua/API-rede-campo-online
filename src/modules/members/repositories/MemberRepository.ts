@@ -28,14 +28,6 @@ export class MemberRepository implements IMemberRepository {
     return count > 0;
   }
 
-  async findByCpf(cpf: string): Promise<{ id: number; cpf: string } | null> {
-    const row = await this.ormRepo
-      .createQueryBuilder("m")
-      .select(["m.id as id", "m.cpf as cpf"])
-      .where("m.cpf = :cpf", { cpf })
-      .getRawOne();
-    return row ? { id: Number(row.id), cpf: row.cpf } : null;
-  }
 
   async findByEmail(email: string): Promise<{ id: number; email: string } | null> {
     const row = await this.ormRepo
@@ -51,7 +43,6 @@ export class MemberRepository implements IMemberRepository {
       id: Number(raw.m_id),
       name: raw.m_name,
       email: raw.m_email,
-      cpf: raw.m_cpf,
       description: raw.m_description,
       lattes_url: raw.m_lattes_url ?? null,
       linked_in_url: raw.m_linked_in_url ?? null,
@@ -87,7 +78,6 @@ export class MemberRepository implements IMemberRepository {
         "m.id as m_id",
         "m.name as m_name",
         "m.email as m_email",
-        "m.cpf as m_cpf",
         "m.description as m_description",
         "m.lattes_url as m_lattes_url",
         "m.linked_in_url as m_linked_in_url",
@@ -112,8 +102,8 @@ export class MemberRepository implements IMemberRepository {
     if (trimmed) {
       const digits = trimmed.replace(/\D/g, "");
       qb.andWhere(
-        "(m.name LIKE :s OR m.email LIKE :s OR m.cpf LIKE :cpf OR r.name LIKE :s OR o.name LIKE :s)",
-        { s: `%${trimmed}%`, cpf: `%${digits}%` }
+        "(m.name LIKE :s OR m.email LIKE :s OR r.name LIKE :s OR o.name LIKE :s)",
+        { s: `%${trimmed}%` }
       );
     }
 
@@ -141,7 +131,6 @@ export class MemberRepository implements IMemberRepository {
         "m.organization_id as m_organization_id",
         "m.name as m_name",
         "m.email as m_email",
-        "m.cpf as m_cpf",
         "m.description as m_description",
         "m.lattes_url as m_lattes_url",
         "m.linked_in_url as m_linked_in_url",
