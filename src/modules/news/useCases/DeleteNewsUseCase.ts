@@ -1,21 +1,21 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { INewRepository } from "../repositories/INewRepository";
+import { INewsRepository } from "../repositories/INewsRepository";
 
 @injectable()
 export class DeleteNewsUseCase {
   constructor(
-    @inject("NewRepository")
-    private newRepository: INewRepository
+    @inject("NewsRepository")
+    private newsRepository: INewsRepository
   ) {}
 
   async execute(id: number): Promise<void> {
-    const exists = await this.newRepository.existsById(id);
+    const exists = await this.newsRepository.existsById(id);
 
     if (!exists) {
       throw new AppError("News not found", 404, "NEWS_NOT_FOUND");
     }
 
-    await this.newRepository.delete(id);
+    await this.newsRepository.delete(id);
   }
 }

@@ -1,16 +1,16 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../../shared/infra/database/data-source";
-import { News } from "../entities/New";
+import { News } from "../entities/News";
 import {
-  INewRepository,
+  INewsRepository,
   ICreateNewsDTO,
   IUpdateNewsDTO,
   PaginateParams,
   NewsPaginateProperties,
   NewsListItem,
-} from "./INewRepository";
+} from "./INewsRepository";
 
-export class NewRepository implements INewRepository {
+export class NewsRepository implements INewsRepository {
   private ormRepo: Repository<News>;
 
   constructor() {

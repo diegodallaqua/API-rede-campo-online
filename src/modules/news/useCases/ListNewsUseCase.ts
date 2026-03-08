@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { INewRepository, NewsPaginateProperties } from "../repositories/INewRepository";
+import { INewsRepository, NewsPaginateProperties } from "../repositories/INewsRepository";
 
 type IRequest = {
   search?: string;
@@ -11,8 +11,8 @@ type IRequest = {
 @injectable()
 export class ListNewsUseCase {
   constructor(
-    @inject("NewRepository")
-    private newRepository: INewRepository
+    @inject("NewsRepository")
+    private newsRepository: INewsRepository
   ) {}
 
   async execute({
@@ -26,7 +26,7 @@ export class ListNewsUseCase {
 
     const skip = (safePage - 1) * safeTake;
 
-    return this.newRepository.findAll({
+    return this.newsRepository.findAll({
       search,
       page: safePage,
       skip,

@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { INewRepository, IUpdateNewsDTO } from "../repositories/INewRepository";
+import { INewsRepository, IUpdateNewsDTO } from "../repositories/INewsRepository";
 import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 import { IMemberRepository } from "../../members/repositories/IMemberRepository";
 
 @injectable()
 export class UpdateNewsUseCase {
   constructor(
-    @inject("NewRepository")
-    private newRepository: INewRepository,
+    @inject("NewsRepository")
+    private newsRepository: INewsRepository,
 
     @inject("ProjectRepository")
     private projectRepository: IProjectRepository,
@@ -18,7 +18,7 @@ export class UpdateNewsUseCase {
   ) {}
 
   async execute(data: IUpdateNewsDTO): Promise<void> {
-    const exists = await this.newRepository.existsById(data.id);
+    const exists = await this.newsRepository.existsById(data.id);
     if (!exists) {
       throw new AppError("News not found", 404, "NEWS_NOT_FOUND");
     }
@@ -40,7 +40,7 @@ export class UpdateNewsUseCase {
       throw new AppError("Invalid publication_date", 400, "INVALID_PUBLICATION_DATE");
     }
 
-    await this.newRepository.update({
+    await this.newsRepository.update({
       id: data.id,
       project_id: data.project_id ?? null,
       member_id: data.member_id,

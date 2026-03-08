@@ -45,7 +45,7 @@ export interface IUpdateNewsDTO extends ICreateNewsDTO {
   id: number;
 }
 
-export interface INewRepository {
+export interface INewsRepository {
   create(data: ICreateNewsDTO): Promise<void>;
   findAll(params: PaginateParams): Promise<NewsPaginateProperties>;
   findByIdWithRelations(id: number): Promise<NewsListItem | null>;

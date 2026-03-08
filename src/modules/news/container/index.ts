@@ -1,8 +1,8 @@
 import { container } from "tsyringe";
-import { INewRepository } from "../repositories/INewRepository";
-import { NewRepository } from "../repositories/NewRepository";
+import { INewsRepository } from "../repositories/INewsRepository";
+import { NewsRepository } from "../repositories/NewsRepository";
 
-container.registerSingleton<INewRepository>(
-  "NewRepository",
-  NewRepository
+container.registerSingleton<INewsRepository>(
+  "NewsRepository",
+  NewsRepository
 );

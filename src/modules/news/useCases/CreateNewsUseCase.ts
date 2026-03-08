@@ -1,14 +1,14 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { INewRepository, ICreateNewsDTO } from "../repositories/INewRepository";
+import { INewsRepository, ICreateNewsDTO } from "../repositories/INewsRepository";
 import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 import { IMemberRepository } from "../../members/repositories/IMemberRepository";
 
 @injectable()
 export class CreateNewsUseCase {
   constructor(
-    @inject("NewRepository")
-    private newRepository: INewRepository,
+    @inject("NewsRepository")
+    private newsRepository: INewsRepository,
 
     @inject("ProjectRepository")
     private projectRepository: IProjectRepository,
@@ -35,7 +35,7 @@ export class CreateNewsUseCase {
       throw new AppError("Invalid publication_date", 400, "INVALID_PUBLICATION_DATE");
     }
 
-    await this.newRepository.create({
+    await this.newsRepository.create({
       project_id: data.project_id ?? null,
       member_id: data.member_id,
       title: data.title.trim(),

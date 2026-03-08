@@ -10,10 +10,11 @@ import { memberRolesRoutes } from "../../../../modules/memberRoles/http/routes/r
 import { membersRoutes } from "../../../../modules/members/http/routes/routes";
 import { projectTypesRoutes } from "../../../../modules/projectTypes/http/routes/routes";
 import { projectsRoutes } from "../../../../modules/projects/http/routes/routes";
-import { projectMediaRoutes } from "../../../../modules/projectMedias/http/routes/routes";
+import { projectMediaRoutes } from "../../../../modules/projectMedia/http/routes/routes";
 import { eventsRoutes } from "../../../../modules/events/http/routes/routes";
-import { eventMediaRoutes } from "../../../../modules/eventMedias/http/routes/routes";
+import { eventMediaRoutes } from "../../../../modules/eventMedia/http/routes/routes";
 import { newsRoutes } from "../../../../modules/news/http/routes/routes";
+import { newsMediaRoutes } from "../../../../modules/newsMedia/http/routes/routes";
 
 
 export const routes = Router();
@@ -34,3 +35,4 @@ routes.use("/project-media", projectMediaRoutes);
 routes.use("/events", eventsRoutes);
 routes.use("/event-media", eventMediaRoutes);
 routes.use("/news", newsRoutes);
+routes.use("/news-media", newsMediaRoutes);
