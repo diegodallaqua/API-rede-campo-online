@@ -35,7 +35,6 @@ export class ProjectRepository implements IProjectRepository {
       status: Boolean(raw.p_status),
       begin_date: raw.p_begin_date,
       end_date: raw.p_end_date ?? null,
-      external_staff: raw.p_external_staff ?? null,
       projectType: {
         id: Number(raw.t_id),
         name: raw.t_name,
@@ -60,7 +59,6 @@ export class ProjectRepository implements IProjectRepository {
         "p.status as p_status",
         "p.begin_date as p_begin_date",
         "p.end_date as p_end_date",
-        "p.external_staff as p_external_staff",
         "t.id as t_id",
         "t.name as t_name",
       ])
@@ -101,7 +99,6 @@ export class ProjectRepository implements IProjectRepository {
         "p.status as p_status",
         "p.begin_date as p_begin_date",
         "p.end_date as p_end_date",
-        "p.external_staff as p_external_staff",
         "t.id as t_id",
         "t.name as t_name",
       ])

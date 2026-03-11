@@ -14,7 +14,6 @@ export type ProjectListItem = {
   status: boolean;
   begin_date: string;
   end_date: string | null;
-  external_staff: string | null;
 
   projectType: {
     id: number;
@@ -36,7 +35,6 @@ export interface ICreateProjectDTO {
   status: boolean;
   begin_date: string; 
   end_date?: string | null;
-  external_staff?: string | null;
 }
 
 export interface IUpdateProjectDTO extends ICreateProjectDTO {

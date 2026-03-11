@@ -32,7 +32,6 @@ export class UpdateProjectUseCase {
       project_type_id: data.project_type_id,
       name: data.name.trim(),
       description: data.description.trim(),
-      external_staff: data.external_staff?.trim() ?? null,
       end_date: end,
     });
   }

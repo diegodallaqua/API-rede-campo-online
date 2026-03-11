@@ -37,6 +37,4 @@ export class Project {
   @Column({ type: "date", nullable: true })
   end_date?: string | null;
 
-  @Column({ type: "varchar", length: 255, nullable: true })
-  external_staff?: string | null;
 }

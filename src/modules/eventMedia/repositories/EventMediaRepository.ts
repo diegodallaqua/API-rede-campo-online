@@ -51,7 +51,6 @@ export class EventMediaRepository implements IEventMediaRepository {
           status: Boolean(raw.p_status),
           begin_date: raw.p_begin_date,
           end_date: raw.p_end_date ?? null,
-          external_staff: raw.p_external_staff ?? null,
           projectType: {
             id: Number(raw.pt_id),
             name: raw.pt_name,
@@ -113,7 +112,6 @@ export class EventMediaRepository implements IEventMediaRepository {
         "p.status as p_status",
         "p.begin_date as p_begin_date",
         "p.end_date as p_end_date",
-        "p.external_staff as p_external_staff",
 
         // projectType
         "pt.id as pt_id",
@@ -190,7 +188,6 @@ export class EventMediaRepository implements IEventMediaRepository {
         "p.status as p_status",
         "p.begin_date as p_begin_date",
         "p.end_date as p_end_date",
-        "p.external_staff as p_external_staff",
 
         "pt.id as pt_id",
         "pt.name as pt_name",

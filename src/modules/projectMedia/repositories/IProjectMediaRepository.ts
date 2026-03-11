@@ -28,7 +28,6 @@ export type ProjectMediaListItem = {
     status: boolean;
     begin_date: string;
     end_date: string | null;
-    external_staff: string | null;
 
     projectType: {
       id: number;

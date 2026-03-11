@@ -42,7 +42,6 @@ projectsRoutes.post(
       status: Joi.boolean().required(),
       begin_date: Joi.string().pattern(isoDate).required(),
       end_date: Joi.string().pattern(isoDate).optional().allow(null, ""),
-      external_staff: Joi.string().trim().max(255).optional().allow(null, ""),
     }),
   }),
   createController.handle
@@ -61,7 +60,6 @@ projectsRoutes.put(
       status: Joi.boolean().required(),
       begin_date: Joi.string().pattern(isoDate).required(),
       end_date: Joi.string().pattern(isoDate).optional().allow(null, ""),
-      external_staff: Joi.string().trim().max(255).optional().allow(null, ""),
     }),
   }),
   updateController.handle

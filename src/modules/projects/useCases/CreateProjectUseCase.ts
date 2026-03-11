@@ -28,7 +28,6 @@ export class CreateProjectUseCase {
       ...data,
       name: data.name.trim(),
       description: data.description.trim(),
-      external_staff: data.external_staff?.trim() ?? null,
       end_date: end,
     });
   }

@@ -24,7 +24,6 @@ export class CreateProjects20260303100000 implements MigrationInterface {
           { name: "begin_date", type: "date", isNullable: false },
           { name: "end_date", type: "date", isNullable: true },
 
-          { name: "external_staff", type: "varchar", length: "255", isNullable: true },
         ],
       })
     );
