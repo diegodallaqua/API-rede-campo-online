@@ -13,3 +13,4 @@ import "../../modules/eventMedia/container";
 import "../../modules/news/container";
 import "../../modules/newsMedia/container";
 import "../../modules/publications/container";
+import "../../modules/externalAuthors/container";

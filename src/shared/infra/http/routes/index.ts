@@ -16,6 +16,7 @@ import { eventMediaRoutes } from "../../../../modules/eventMedia/http/routes/rou
 import { newsRoutes } from "../../../../modules/news/http/routes/routes";
 import { newsMediaRoutes } from "../../../../modules/newsMedia/http/routes/routes";
 import { publicationsRoutes } from "../../../../modules/publications/http/routes/routes";
+import { externalAuthorsRoutes } from "../../../../modules/externalAuthors/http/routes/routes";
 
 
 export const routes = Router();
@@ -38,3 +39,4 @@ routes.use("/event-media", eventMediaRoutes);
 routes.use("/news", newsRoutes);
 routes.use("/news-media", newsMediaRoutes);
 routes.use("/publications", publicationsRoutes);
+routes.use("/external-authors", externalAuthorsRoutes);
