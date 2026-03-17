@@ -14,3 +14,4 @@ import "../../modules/news/container";
 import "../../modules/newsMedia/container";
 import "../../modules/publications/container";
 import "../../modules/externalAuthors/container";
+import "../../modules/contributorRoles/container";
