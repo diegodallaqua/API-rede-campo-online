@@ -17,3 +17,4 @@ import "../../modules/externalAuthors/container";
 import "../../modules/contributorRoles/container";
 import "../../modules/publicationContributors/container";
 import "../../modules/articles/container";
+import "../../modules/technicalReports/container";
