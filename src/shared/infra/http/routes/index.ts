@@ -18,6 +18,7 @@ import { newsMediaRoutes } from "../../../../modules/newsMedia/http/routes/route
 import { publicationsRoutes } from "../../../../modules/publications/http/routes/routes";
 import { externalAuthorsRoutes } from "../../../../modules/externalAuthors/http/routes/routes";
 import { contributorRolesRoutes } from "../../../../modules/contributorRoles/http/routes/routes";
+import { publicationContributorsRoutes } from "../../../../modules/publicationContributors/http/routes/routes";
 
 
 export const routes = Router();
@@ -42,3 +43,4 @@ routes.use("/news-media", newsMediaRoutes);
 routes.use("/publications", publicationsRoutes);
 routes.use("/external-authors", externalAuthorsRoutes);
 routes.use("/contributor-role", contributorRolesRoutes);
+routes.use("/publication-contributors", publicationContributorsRoutes);
