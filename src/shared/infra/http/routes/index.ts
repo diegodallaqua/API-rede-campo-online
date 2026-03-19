@@ -19,6 +19,7 @@ import { publicationsRoutes } from "../../../../modules/publications/http/routes
 import { externalAuthorsRoutes } from "../../../../modules/externalAuthors/http/routes/routes";
 import { contributorRolesRoutes } from "../../../../modules/contributorRoles/http/routes/routes";
 import { publicationContributorsRoutes } from "../../../../modules/publicationContributors/http/routes/routes";
+import { articlesRoutes } from "../../../../modules/articles/http/routes/routes";
 
 
 export const routes = Router();
@@ -44,3 +45,4 @@ routes.use("/publications", publicationsRoutes);
 routes.use("/external-authors", externalAuthorsRoutes);
 routes.use("/contributor-role", contributorRolesRoutes);
 routes.use("/publication-contributors", publicationContributorsRoutes);
+routes.use("/articles", articlesRoutes);
