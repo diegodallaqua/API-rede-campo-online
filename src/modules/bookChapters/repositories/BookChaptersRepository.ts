@@ -1,23 +1,23 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../../shared/infra/database/data-source";
-import { Book } from "../entities/Book";
+import { BookChapter } from "../entities/BookChapter";
 import {
-  IBookRepository,
-  ICreateBookDTO,
-  IUpdateBookDTO,
+  IBookChapterRepository,
+  ICreateBookChapterDTO,
+  IUpdateBookChapterDTO,
   PaginateParams,
-  BookPaginateProperties,
-  BookListItem,
-} from "./IBookRepository";
+  BookChapterPaginateProperties,
+  BookChapterListItem,
+} from "./IBookChapterRepository";
 
-export class BookRepository implements IBookRepository {
-  private ormRepo: Repository<Book>;
+export class BookChapterRepository implements IBookChapterRepository {
+  private ormRepo: Repository<BookChapter>;
 
   constructor() {
-    this.ormRepo = AppDataSource.getRepository(Book);
+    this.ormRepo = AppDataSource.getRepository(BookChapter);
   }
 
-  async create(data: ICreateBookDTO): Promise<void> {
+  async create(data: ICreateBookChapterDTO): Promise<void> {
     const entity = this.ormRepo.create(data);
     await this.ormRepo.save(entity);
   }
@@ -27,11 +27,10 @@ export class BookRepository implements IBookRepository {
     return count > 0;
   }
 
-  private mapRawToItem(raw: any): BookListItem {
+  private mapRawToItem(raw: any): BookChapterListItem {
     return {
-      publisher: raw.b_publisher,
-      edition: raw.b_edition,
-      cover_photo: raw.b_cover_photo ?? null,
+      book_name: raw.bc_book_name,
+      chapter_number: Number(raw.bc_chapter_number),
       publication: {
         id: Number(raw.p_id),
         title: raw.p_title,
@@ -44,12 +43,11 @@ export class BookRepository implements IBookRepository {
 
   private baseQuery() {
     return this.ormRepo
-      .createQueryBuilder("b")
-      .innerJoin("b.publication", "p")
+      .createQueryBuilder("bc")
+      .innerJoin("bc.publication", "p")
       .select([
-        "b.publisher as b_publisher",
-        "b.edition as b_edition",
-        "b.cover_photo as b_cover_photo",
+        "bc.book_name as bc_book_name",
+        "bc.chapter_number as bc_chapter_number",
 
         "p.id as p_id",
         "p.title as p_title",
@@ -64,7 +62,7 @@ export class BookRepository implements IBookRepository {
     page,
     skip,
     take,
-  }: PaginateParams): Promise<BookPaginateProperties> {
+  }: PaginateParams): Promise<BookChapterPaginateProperties> {
     const qb = this.baseQuery()
       .orderBy("p.id", "ASC")
       .addOrderBy("p.publication_date", "ASC")
@@ -73,7 +71,7 @@ export class BookRepository implements IBookRepository {
 
     const trimmed = title?.trim();
     if (trimmed) {
-      qb.andWhere("(p.title LIKE :t OR b.publisher LIKE :t OR b.edition LIKE :t)", {
+      qb.andWhere("(p.title LIKE :t OR bc.book_name LIKE :t)", {
         t: `%${trimmed}%`,
       });
     }
@@ -91,8 +89,8 @@ export class BookRepository implements IBookRepository {
     };
   }
 
-  async findByIdWithRelations(publication_id: number): Promise<BookListItem | null> {
-    const qb = this.baseQuery().where("b.publication_id = :publication_id", {
+  async findByIdWithRelations(publication_id: number): Promise<BookChapterListItem | null> {
+    const qb = this.baseQuery().where("bc.publication_id = :publication_id", {
       publication_id,
     });
 
@@ -101,13 +99,12 @@ export class BookRepository implements IBookRepository {
     return raw ? this.mapRawToItem(raw) : null;
   }
 
-  async update(data: IUpdateBookDTO): Promise<void> {
+  async update(data: IUpdateBookChapterDTO): Promise<void> {
     await this.ormRepo.update(
       { publication_id: data.publication_id },
       {
-        publisher: data.publisher,
-        edition: data.edition,
-        cover_photo: data.cover_photo ?? null,
+        book_name: data.book_name,
+        chapter_number: data.chapter_number,
       }
     );
   }

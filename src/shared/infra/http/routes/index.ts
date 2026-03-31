@@ -22,6 +22,7 @@ import { publicationContributorsRoutes } from "../../../../modules/publicationCo
 import { articlesRoutes } from "../../../../modules/articles/http/routes/routes";
 import { technicalReportsRoutes } from "../../../../modules/technicalReports/http/routes/routes";
 import { booksRoutes } from "../../../../modules/books/http/routes/routes";
+import { bookChaptersRoutes } from "../../../../modules/bookChapters/http/routes/routes";
 
 export const routes = Router();
 
@@ -49,3 +50,4 @@ routes.use("/publication-contributors", publicationContributorsRoutes);
 routes.use("/articles", articlesRoutes);
 routes.use("/technical-reports", technicalReportsRoutes);
 routes.use("/books", booksRoutes);
+routes.use("/book-chapters", bookChaptersRoutes);

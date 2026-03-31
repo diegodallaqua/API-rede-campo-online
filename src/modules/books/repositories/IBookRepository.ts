@@ -1,5 +1,4 @@
 export type BookListItem = {
-  publication_id: number;
   publisher: string;
   edition: string;
   cover_photo: string | null;
