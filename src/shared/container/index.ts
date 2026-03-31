@@ -18,3 +18,4 @@ import "../../modules/contributorRoles/container";
 import "../../modules/publicationContributors/container";
 import "../../modules/articles/container";
 import "../../modules/technicalReports/container";
+import "../../modules/books/container";
