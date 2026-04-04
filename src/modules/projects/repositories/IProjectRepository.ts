@@ -15,6 +15,12 @@ export type ProjectListItem = {
     id: number;
     name: string;
   }[];
+
+  members?: {
+    id: number;
+    name: string;
+    email: string;
+  }[];
 };
 
 export type ProjectsPaginateProperties = {

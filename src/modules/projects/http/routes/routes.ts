@@ -42,8 +42,11 @@ projectsRoutes.post(
       status: Joi.boolean().required(),
       begin_date: Joi.string().pattern(isoDate).required(),
       end_date: Joi.string().pattern(isoDate).optional().allow(null, ""),
-      external_staff: Joi.string().trim().max(255).optional().allow(null, ""),
       research_area_ids: Joi.array()
+        .items(Joi.number().integer().positive())
+        .optional()
+        .default([]),
+      member_ids: Joi.array()
         .items(Joi.number().integer().positive())
         .optional()
         .default([]),
@@ -65,8 +68,11 @@ projectsRoutes.put(
       status: Joi.boolean().required(),
       begin_date: Joi.string().pattern(isoDate).required(),
       end_date: Joi.string().pattern(isoDate).optional().allow(null, ""),
-      external_staff: Joi.string().trim().max(255).optional().allow(null, ""),
       research_area_ids: Joi.array()
+        .items(Joi.number().integer().positive())
+        .optional()
+        .default([]),
+      member_ids: Joi.array()
         .items(Joi.number().integer().positive())
         .optional()
         .default([]),

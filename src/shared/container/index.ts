@@ -24,3 +24,4 @@ import "../../modules/researchAreas/container";
 import "../../modules/publicationHasResearchAreas/container";
 import "../../modules/newsHasResearchAreas/container";
 import "../../modules/projectHasResearchAreas/container";
+import "../../modules/projectHasMembers/container";

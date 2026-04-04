@@ -4,6 +4,8 @@ import { IProjectRepository } from "../repositories/IProjectRepository";
 import { IProjectTypeRepository } from "../../projectTypes/repositories/IProjectTypeRepository";
 import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
 import { IProjectHasResearchAreasRepository } from "../../projectHasResearchAreas/repositories/IProjectHasResearchAreaRepository";
+import { IProjectHasMembersRepository } from "../../projectHasMembers/repositories/IProjectHasMembersRepository";
+import { IMemberRepository } from "../../members/repositories/IMemberRepository";
 
 type IRequest = {
   project_type_id: number;
@@ -12,8 +14,8 @@ type IRequest = {
   status: boolean;
   begin_date: string;
   end_date?: string | null;
-  external_staff?: string | null;
   research_area_ids?: number[];
+  member_ids?: number[];
 };
 
 @injectable()
@@ -29,7 +31,13 @@ export class CreateProjectUseCase {
     private researchAreaRepository: IResearchAreaRepository,
 
     @inject("ProjectHasResearchAreasRepository")
-    private projectHasResearchAreasRepository: IProjectHasResearchAreasRepository
+    private projectHasResearchAreasRepository: IProjectHasResearchAreasRepository,
+
+    @inject("ProjectHasMembersRepository")
+    private projectHasMembersRepository: IProjectHasMembersRepository,
+
+    @inject("MemberRepository")
+    private memberRepository: IMemberRepository
   ) {}
 
   async execute({
@@ -39,8 +47,8 @@ export class CreateProjectUseCase {
     status,
     begin_date,
     end_date,
-    external_staff,
     research_area_ids = [],
+    member_ids = [],
   }: IRequest): Promise<void> {
     const type = await this.projectTypeRepository.findById(project_type_id);
     if (!type) {
@@ -55,6 +63,7 @@ export class CreateProjectUseCase {
     }
 
     const uniqueResearchAreaIds = [...new Set(research_area_ids)];
+    const uniqueMemberIds = [...new Set(member_ids)];
 
     for (const researchAreaId of uniqueResearchAreaIds) {
       const researchArea = await this.researchAreaRepository.findById(researchAreaId);
@@ -63,6 +72,17 @@ export class CreateProjectUseCase {
           `Research area ${researchAreaId} not found`,
           404,
           "RESEARCH_AREA_NOT_FOUND"
+        );
+      }
+    }
+
+    for (const memberId of uniqueMemberIds) {
+      const memberExists = await this.memberRepository.existsById(memberId);
+      if (!memberExists) {
+        throw new AppError(
+          `Member ${memberId} not found`,
+          404,
+          "MEMBER_NOT_FOUND"
         );
       }
     }
@@ -80,6 +100,13 @@ export class CreateProjectUseCase {
       uniqueResearchAreaIds.map((research_area_id) => ({
         project_id: createdProject.id,
         research_area_id,
+      }))
+    );
+
+    await this.projectHasMembersRepository.createMany(
+      uniqueMemberIds.map((member_id) => ({
+        project_id: createdProject.id,
+        member_id,
       }))
     );
   }
