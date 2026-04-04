@@ -17,9 +17,11 @@ export class ProjectRepository implements IProjectRepository {
     this.ormRepo = AppDataSource.getRepository(Project);
   }
 
-  async create(data: ICreateProjectDTO): Promise<void> {
+  async create(data: ICreateProjectDTO): Promise<{ id: number }> {
     const project = this.ormRepo.create(data);
-    await this.ormRepo.save(project);
+    const saved = await this.ormRepo.save(project);
+
+    return { id: saved.id };
   }
 
   async existsById(id: number): Promise<boolean> {

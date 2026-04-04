@@ -1,12 +1,3 @@
-export type PaginateParams = {
-  page: number;
-  skip: number;
-  take: number;
-
-  project_name?: string;
-  status?: boolean;
-};
-
 export type ProjectListItem = {
   id: number;
   name: string;
@@ -19,6 +10,11 @@ export type ProjectListItem = {
     id: number;
     name: string;
   };
+
+  research_areas?: {
+    id: number;
+    name: string;
+  }[];
 };
 
 export type ProjectsPaginateProperties = {
@@ -33,7 +29,7 @@ export interface ICreateProjectDTO {
   name: string;
   description: string;
   status: boolean;
-  begin_date: string; 
+  begin_date: string;
   end_date?: string | null;
 }
 
@@ -41,8 +37,17 @@ export interface IUpdateProjectDTO extends ICreateProjectDTO {
   id: number;
 }
 
+export type PaginateParams = {
+  search?: string;
+  page: number;
+  skip: number;
+  take: number;
+  project_name?: string;
+  status?: boolean;
+};
+
 export interface IProjectRepository {
-  create(data: ICreateProjectDTO): Promise<void>;
+  create(data: ICreateProjectDTO): Promise<{ id: number }>;
 
   findAll(params: PaginateParams): Promise<ProjectsPaginateProperties>;
 
