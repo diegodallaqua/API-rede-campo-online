@@ -41,6 +41,10 @@ newsRoutes.post(
       description: Joi.string().trim().min(2).max(1000).required(),
       content: Joi.string().trim().min(2).required(),
       publication_date: Joi.string().pattern(isoDate).required(),
+      research_area_ids: Joi.array()
+        .items(Joi.number().integer().positive())
+        .optional()
+        .default([]),
     }),
   }),
   createController.handle
@@ -59,6 +63,10 @@ newsRoutes.put(
       description: Joi.string().trim().min(2).max(1000).required(),
       content: Joi.string().trim().min(2).required(),
       publication_date: Joi.string().pattern(isoDate).required(),
+      research_area_ids: Joi.array()
+        .items(Joi.number().integer().positive())
+        .optional()
+        .default([]),
     }),
   }),
   updateController.handle

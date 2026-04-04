@@ -1,5 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { INewsRepository, NewsPaginateProperties } from "../repositories/INewsRepository";
+import { INewsRepository, NewsPaginateProperties, NewsListItem } from "../repositories/INewsRepository";
+import { INewsHasResearchAreasRepository } from "../../newsHasResearchAreas/repositories/INewsHasResearchAreaRepository";
 
 type IRequest = {
   search?: string;
@@ -12,7 +13,10 @@ type IRequest = {
 export class ListNewsUseCase {
   constructor(
     @inject("NewsRepository")
-    private newsRepository: INewsRepository
+    private newsRepository: INewsRepository,
+
+    @inject("NewsHasResearchAreasRepository")
+    private newsHasResearchAreasRepository: INewsHasResearchAreasRepository
   ) {}
 
   async execute({
@@ -26,12 +30,31 @@ export class ListNewsUseCase {
 
     const skip = (safePage - 1) * safeTake;
 
-    return this.newsRepository.findAll({
+    const news = await this.newsRepository.findAll({
       search,
       page: safePage,
       skip,
       take: safeTake,
       project_id,
     });
+
+    const enrichedData: NewsListItem[] = await Promise.all(
+      news.data.map(async (item) => {
+        const researchAreas =
+          await this.newsHasResearchAreasRepository.findResearchAreasByNewsId(item.id);
+
+        return {
+          ...item,
+          research_areas: researchAreas,
+        };
+      })
+    );
+
+    return {
+      per_page: news.per_page,
+      total: news.total,
+      current_page: news.current_page,
+      data: enrichedData,
+    };
   }
 }

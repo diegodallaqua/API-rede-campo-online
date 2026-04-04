@@ -15,6 +15,11 @@ export type NewsListItem = {
     name: string;
     email: string;
   };
+
+  research_areas?: {
+    id: number;
+    name: string;
+  }[];
 };
 
 export type PaginateParams = {
@@ -46,7 +51,7 @@ export interface IUpdateNewsDTO extends ICreateNewsDTO {
 }
 
 export interface INewsRepository {
-  create(data: ICreateNewsDTO): Promise<void>;
+  create(data: ICreateNewsDTO): Promise<{ id: number }>;
   findAll(params: PaginateParams): Promise<NewsPaginateProperties>;
   findByIdWithRelations(id: number): Promise<NewsListItem | null>;
   existsById(id: number): Promise<boolean>;

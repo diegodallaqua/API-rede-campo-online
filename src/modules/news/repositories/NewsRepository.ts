@@ -17,9 +17,11 @@ export class NewsRepository implements INewsRepository {
     this.ormRepo = AppDataSource.getRepository(News);
   }
 
-  async create(data: ICreateNewsDTO): Promise<void> {
+  async create(data: ICreateNewsDTO): Promise<{ id: number }> {
     const entity = this.ormRepo.create(data);
-    await this.ormRepo.save(entity);
+    const saved = await this.ormRepo.save(entity);
+
+    return { id: saved.id };
   }
 
   async existsById(id: number): Promise<boolean> {

@@ -22,3 +22,4 @@ import "../../modules/books/container";
 import "../../modules/bookChapters/container";
 import "../../modules/researchAreas/container";
 import "../../modules/publicationHasResearchAreas/container";
+import "../../modules/newsHasResearchAreas/container";

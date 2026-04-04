@@ -1,8 +1,21 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { INewsRepository, IUpdateNewsDTO } from "../repositories/INewsRepository";
+import { INewsRepository } from "../repositories/INewsRepository";
 import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 import { IMemberRepository } from "../../members/repositories/IMemberRepository";
+import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
+import { INewsHasResearchAreasRepository } from "../../newsHasResearchAreas/repositories/INewsHasResearchAreaRepository";
+
+type IRequest = {
+  id: number;
+  project_id?: number | null;
+  member_id: number;
+  title: string;
+  description: string;
+  content: string;
+  publication_date: string;
+  research_area_ids?: number[];
+};
 
 @injectable()
 export class UpdateNewsUseCase {
@@ -14,40 +27,77 @@ export class UpdateNewsUseCase {
     private projectRepository: IProjectRepository,
 
     @inject("MemberRepository")
-    private memberRepository: IMemberRepository
+    private memberRepository: IMemberRepository,
+
+    @inject("ResearchAreaRepository")
+    private researchAreaRepository: IResearchAreaRepository,
+
+    @inject("NewsHasResearchAreasRepository")
+    private newsHasResearchAreasRepository: INewsHasResearchAreasRepository
   ) {}
 
-  async execute(data: IUpdateNewsDTO): Promise<void> {
-    const exists = await this.newsRepository.existsById(data.id);
+  async execute({
+    id,
+    project_id,
+    member_id,
+    title,
+    description,
+    content,
+    publication_date,
+    research_area_ids = [],
+  }: IRequest): Promise<void> {
+    const exists = await this.newsRepository.existsById(id);
     if (!exists) {
       throw new AppError("News not found", 404, "NEWS_NOT_FOUND");
     }
 
-    const memberExists = await this.memberRepository.existsById(data.member_id);
+    const memberExists = await this.memberRepository.existsById(member_id);
     if (!memberExists) {
       throw new AppError("Member not found", 404, "MEMBER_NOT_FOUND");
     }
 
-    if (data.project_id) {
-      const projectExists = await this.projectRepository.existsById(data.project_id);
+    if (project_id) {
+      const projectExists = await this.projectRepository.existsById(project_id);
       if (!projectExists) {
         throw new AppError("Project not found", 404, "PROJECT_NOT_FOUND");
       }
     }
 
-    const publicationDate = new Date(data.publication_date);
+    const publicationDate = new Date(publication_date);
     if (Number.isNaN(publicationDate.getTime())) {
       throw new AppError("Invalid publication_date", 400, "INVALID_PUBLICATION_DATE");
     }
 
+    const uniqueResearchAreaIds = [...new Set(research_area_ids)];
+
+    for (const researchAreaId of uniqueResearchAreaIds) {
+      const researchArea = await this.researchAreaRepository.findById(researchAreaId);
+      if (!researchArea) {
+        throw new AppError(
+          `Research area ${researchAreaId} not found`,
+          404,
+          "RESEARCH_AREA_NOT_FOUND"
+        );
+      }
+    }
+
     await this.newsRepository.update({
-      id: data.id,
-      project_id: data.project_id ?? null,
-      member_id: data.member_id,
-      title: data.title.trim(),
-      description: data.description.trim(),
-      content: data.content.trim(),
-      publication_date: data.publication_date,
+      id,
+      project_id: project_id ?? null,
+      member_id,
+      title: title.trim(),
+      description: description.trim(),
+      content: content.trim(),
+      publication_date,
     });
+
+    await this.newsHasResearchAreasRepository.deleteByNewsId(id);
+
+    await this.newsHasResearchAreasRepository.createMany(
+      uniqueResearchAreaIds.map((research_area_id) => ({
+        research_area_id,
+        news_id: id,
+      }))
+    );
   }
 }
