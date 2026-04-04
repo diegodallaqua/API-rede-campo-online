@@ -20,3 +20,5 @@ import "../../modules/articles/container";
 import "../../modules/technicalReports/container";
 import "../../modules/books/container";
 import "../../modules/bookChapters/container";
+import "../../modules/researchAreas/container";
+import "../../modules/publicationHasResearchAreas/container";

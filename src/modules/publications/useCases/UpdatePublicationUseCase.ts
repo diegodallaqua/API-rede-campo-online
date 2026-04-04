@@ -2,6 +2,8 @@ import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
 import { Publication } from "../entities/Publication";
 import { IPublicationRepository } from "../repositories/IPublicationRepository";
+import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
+import { IPublicationHasResearchAreasRepository } from "../../publicationHasResearchAreas/repositories/IPublicationHasResearchAreaRepository";
 
 type IRequest = {
   id: number;
@@ -9,13 +11,20 @@ type IRequest = {
   abstract: string;
   publication_date: string;
   doi?: string | null;
+  research_area_ids?: number[];
 };
 
 @injectable()
 export class UpdatePublicationUseCase {
   constructor(
     @inject("PublicationRepository")
-    private publicationRepository: IPublicationRepository
+    private publicationRepository: IPublicationRepository,
+
+    @inject("ResearchAreaRepository")
+    private researchAreaRepository: IResearchAreaRepository,
+
+    @inject("PublicationHasResearchAreasRepository")
+    private publicationHasResearchAreasRepository: IPublicationHasResearchAreasRepository
   ) {}
 
   async execute({
@@ -24,6 +33,7 @@ export class UpdatePublicationUseCase {
     abstract,
     publication_date,
     doi,
+    research_area_ids = [],
   }: IRequest): Promise<Publication> {
     const publication = await this.publicationRepository.findById(id);
 
@@ -45,12 +55,36 @@ export class UpdatePublicationUseCase {
       }
     }
 
-    return this.publicationRepository.update({
+    const uniqueResearchAreaIds = [...new Set(research_area_ids)];
+
+    for (const researchAreaId of uniqueResearchAreaIds) {
+      const researchArea = await this.researchAreaRepository.findById(researchAreaId);
+      if (!researchArea) {
+        throw new AppError(
+          `Research area ${researchAreaId} not found`,
+          404,
+          "RESEARCH_AREA_NOT_FOUND"
+        );
+      }
+    }
+
+    const updatedPublication = await this.publicationRepository.update({
       id,
       title: title.trim(),
       abstract: abstract.trim(),
       publication_date,
       doi: normalizedDoi,
     });
+
+    await this.publicationHasResearchAreasRepository.deleteByPublicationId(id);
+
+    await this.publicationHasResearchAreasRepository.createMany(
+      uniqueResearchAreaIds.map((research_area_id) => ({
+        publication_id: id,
+        research_area_id,
+      }))
+    );
+
+    return updatedPublication;
   }
 }

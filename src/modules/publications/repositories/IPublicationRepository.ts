@@ -11,6 +11,18 @@ export interface IUpdatePublicationDTO extends ICreatePublicationDTO {
   id: number;
 }
 
+export type PublicationWithResearchAreas = {
+  id: number;
+  title: string;
+  abstract: string;
+  publication_date: string;
+  doi: string | null;
+  research_areas: {
+    id: number;
+    name: string;
+  }[];
+};
+
 export type PaginateParams = {
   title?: string;
   page: number;
@@ -23,6 +35,13 @@ export type PublicationPaginateProperties = {
   total: number;
   current_page: number;
   data: Publication[];
+};
+
+export type PublicationWithResearchAreasPaginateProperties = {
+  per_page: number;
+  total: number;
+  current_page: number;
+  data: PublicationWithResearchAreas[];
 };
 
 export interface IPublicationRepository {

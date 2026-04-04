@@ -39,6 +39,10 @@ publicationsRoutes.post(
       abstract: Joi.string().trim().min(2).max(2000).required(),
       publication_date: Joi.string().pattern(isoDate).required(),
       doi: Joi.string().trim().max(255).optional().allow(null, ""),
+      research_area_ids: Joi.array()
+        .items(Joi.number().integer().positive())
+        .optional()
+        .default([]),
     }),
   }),
   createController.handle
@@ -55,6 +59,10 @@ publicationsRoutes.put(
       abstract: Joi.string().trim().min(2).max(2000).required(),
       publication_date: Joi.string().pattern(isoDate).required(),
       doi: Joi.string().trim().max(255).optional().allow(null, ""),
+      research_area_ids: Joi.array()
+        .items(Joi.number().integer().positive())
+        .optional()
+        .default([]),
     }),
   }),
   updateController.handle
