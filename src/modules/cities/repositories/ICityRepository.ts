@@ -1,5 +1,15 @@
 import { City } from "../entities/City";
 
+export type CityListItem = {
+  id: number;
+  name: string;
+
+  state: {
+    id: number;
+    name: string;
+  };
+};
+
 export interface ICreateCityDTO {
   state_id: number;
   name: string;
@@ -23,7 +33,7 @@ export type CitiesPaginateProperties = {
   per_page: number;
   total: number;
   current_page: number;
-  data: City[];
+  data: CityListItem[];
 };
 
 export interface ICityRepository {
@@ -32,6 +42,7 @@ export interface ICityRepository {
   findAll(params: PaginateParams): Promise<CitiesPaginateProperties>;
 
   findById(id: number): Promise<City | null>;
+  findByIdWithRelations(id: number): Promise<CityListItem | null>;
   findByNameInState(state_id: number, name: string): Promise<City | null>;
 
   countByStateId(state_id: number): Promise<number>;

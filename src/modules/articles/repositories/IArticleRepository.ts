@@ -1,5 +1,4 @@
 export type ArticleListItem = {
-  publication_id: number;
   journal_name: string;
   volume: string | null;
   issue: string | null;

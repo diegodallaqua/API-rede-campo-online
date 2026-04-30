@@ -7,6 +7,7 @@ import {
   IUpdateCityDTO,
   PaginateParams,
   CitiesPaginateProperties,
+  CityListItem,
 } from "./ICityRepository";
 
 export class CityRepository implements ICityRepository {
@@ -21,6 +22,29 @@ export class CityRepository implements ICityRepository {
     return this.ormRepo.save(city);
   }
 
+  private mapRawToItem(raw: any): CityListItem {
+    return {
+      id: Number(raw.c_id),
+      name: raw.c_name,
+      state: {
+        id: Number(raw.s_id),
+        name: raw.s_name,
+      },
+    };
+  }
+
+  private baseQuery() {
+    return this.ormRepo
+      .createQueryBuilder("c")
+      .innerJoin("c.state", "s")
+      .select([
+        "c.id     as c_id",
+        "c.name   as c_name",
+        "s.id     as s_id",
+        "s.name   as s_name",
+      ]);
+  }
+
   async findAll({
     search,
     page,
@@ -28,31 +52,42 @@ export class CityRepository implements ICityRepository {
     take,
     state_id,
   }: PaginateParams): Promise<CitiesPaginateProperties> {
-    const where: any = {};
+    const qb = this.baseQuery()
+      .orderBy("c.name", "ASC")
+      .skip(skip)
+      .take(take);
 
-    if (state_id) where.state_id = state_id;
-
-    if (search?.trim()) {
-      where.name = Like(`%${search.trim()}%`);
+    if (state_id) {
+      qb.andWhere("c.state_id = :state_id", { state_id });
     }
 
-    const [data, total] = await this.ormRepo.findAndCount({
-      where,
-      order: { name: "ASC" },
-      skip,
-      take,
-    });
+    if (search?.trim()) {
+      qb.andWhere("c.name LIKE :search", { search: `%${search.trim()}%` });
+    }
+
+    const [raw, total] = await Promise.all([
+      qb.getRawMany(),
+      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+    ]);
 
     return {
       per_page: take,
       total,
       current_page: page,
-      data,
+      data: raw.map((item) => this.mapRawToItem(item)),
     };
   }
 
   async findById(id: number): Promise<City | null> {
     return this.ormRepo.findOne({ where: { id } });
+  }
+
+  async findByIdWithRelations(id: number): Promise<CityListItem | null> {
+    const raw = await this.baseQuery()
+      .where("c.id = :id", { id })
+      .getRawOne();
+
+    return raw ? this.mapRawToItem(raw) : null;
   }
 
   async findByNameInState(state_id: number, name: string): Promise<City | null> {
@@ -65,8 +100,7 @@ export class CityRepository implements ICityRepository {
 
   async update({ id, state_id, name }: IUpdateCityDTO): Promise<City> {
     await this.ormRepo.update({ id }, { state_id, name });
-    const updated = await this.findById(id);
-    return updated as City;
+    return this.findById(id) as Promise<City>;
   }
 
   async delete(id: number): Promise<void> {

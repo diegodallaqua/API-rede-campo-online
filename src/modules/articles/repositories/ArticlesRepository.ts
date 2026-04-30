@@ -29,7 +29,6 @@ export class ArticleRepository implements IArticleRepository {
 
   private mapRawToItem(raw: any): ArticleListItem {
     return {
-      publication_id: Number(raw.a_publication_id),
       journal_name: raw.a_journal_name,
       volume: raw.a_volume ?? null,
       issue: raw.a_issue ?? null,
@@ -50,7 +49,6 @@ export class ArticleRepository implements IArticleRepository {
       .createQueryBuilder("a")
       .innerJoin("a.publication", "p")
       .select([
-        "a.publication_id as a_publication_id",
         "a.journal_name as a_journal_name",
         "a.volume as a_volume",
         "a.issue as a_issue",
