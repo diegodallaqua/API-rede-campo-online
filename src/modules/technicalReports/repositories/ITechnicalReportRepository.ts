@@ -1,5 +1,4 @@
 export type TechnicalReportListItem = {
-  publication_id: number;
   number_of_pages: number;
 
   publication: {

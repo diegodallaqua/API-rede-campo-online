@@ -29,7 +29,6 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
 
   private mapRawToItem(raw: any): TechnicalReportListItem {
     return {
-      publication_id: Number(raw.tr_publication_id),
       number_of_pages: Number(raw.tr_number_of_pages),
 
       publication: {
@@ -54,7 +53,6 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
       .innerJoin("tr.publication", "p")
       .innerJoin("tr.organization", "o")
       .select([
-        "tr.publication_id as tr_publication_id",
         "tr.number_of_pages as tr_number_of_pages",
 
         "p.id as p_id",
