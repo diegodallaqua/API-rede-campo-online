@@ -65,8 +65,8 @@ export class ProjectRepository implements IProjectRepository {
         "t.name as t_name",
       ])
       .orderBy("p.name", "ASC")
-      .skip(skip)
-      .take(take);
+      .limit(take)
+      .offset(skip);
 
     const pname = project_name?.trim();
     if (pname) {

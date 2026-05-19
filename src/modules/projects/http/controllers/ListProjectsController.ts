@@ -17,8 +17,8 @@ export class ListProjectsController {
           ? req.query.status
           : undefined;
 
-    const page = typeof req.query.page === "string" ? Number(req.query.page) : 1;
-    const take = typeof req.query.take === "string" ? Number(req.query.take) : 10;
+    const page = req.query.page !== undefined ? Number(req.query.page) : 1;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
     const useCase = container.resolve(ListProjectsUseCase);
 

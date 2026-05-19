@@ -4,26 +4,11 @@ import { ListPublicationContributorsUseCase } from "../../useCases/ListPublicati
 
 export class ListPublicationContributorsController {
   async handle(req: Request, res: Response): Promise<Response> {
-    const publication_id =
-      typeof req.query.publication_id === "number"
-        ? req.query.publication_id
-        : typeof req.query.publication_id === "string"
-        ? Number(req.query.publication_id)
-        : undefined;
+    const publication_id = req.query.publication_id !== undefined ? Number(req.query.publication_id) : undefined;
 
-    const page =
-      typeof req.query.page === "number"
-        ? req.query.page
-        : typeof req.query.page === "string"
-        ? Number(req.query.page)
-        : 1;
+    const page = req.query.page !== undefined ? Number(req.query.page) : 1;
 
-    const take =
-      typeof req.query.take === "number"
-        ? req.query.take
-        : typeof req.query.take === "string"
-        ? Number(req.query.take)
-        : 10;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
     const useCase = container.resolve(ListPublicationContributorsUseCase);
     const result = await useCase.execute({

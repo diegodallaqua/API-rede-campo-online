@@ -7,19 +7,9 @@ export class ListBooksController {
     const title =
       typeof req.query.title === "string" ? req.query.title : undefined;
 
-    const page =
-      typeof req.query.page === "number"
-        ? req.query.page
-        : typeof req.query.page === "string"
-        ? Number(req.query.page)
-        : 1;
+    const page = req.query.page !== undefined ? Number(req.query.page) : 1;
 
-    const take =
-      typeof req.query.take === "number"
-        ? req.query.take
-        : typeof req.query.take === "string"
-        ? Number(req.query.take)
-        : 10;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
     const useCase = container.resolve(ListBooksUseCase);
     const result = await useCase.execute({

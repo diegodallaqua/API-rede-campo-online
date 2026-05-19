@@ -6,11 +6,10 @@ export class ListOrganizationsController {
   async handle(req: Request, res: Response): Promise<Response> {
     const search = typeof req.query.search === "string" ? req.query.search : undefined;
 
-    const page = typeof req.query.page === "string" ? Number(req.query.page) : 1;
-    const take = typeof req.query.take === "string" ? Number(req.query.take) : 10;
+    const page = req.query.page !== undefined ? Number(req.query.page) : 1;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
-    const address_id =
-      typeof req.query.address_id === "string" ? Number(req.query.address_id) : undefined;
+    const address_id = req.query.address_id !== undefined ? Number(req.query.address_id) : undefined;
 
     const useCase = container.resolve(ListOrganizationsUseCase);
     const result = await useCase.execute({ search, page, take, address_id });

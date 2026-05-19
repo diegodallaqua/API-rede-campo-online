@@ -7,26 +7,11 @@ export class ListTechnicalReportsController {
     const title =
       typeof req.query.title === "string" ? req.query.title : undefined;
 
-    const organization_id =
-      typeof req.query.organization_id === "number"
-        ? req.query.organization_id
-        : typeof req.query.organization_id === "string"
-        ? Number(req.query.organization_id)
-        : undefined;
+    const organization_id = req.query.organization_id !== undefined ? Number(req.query.organization_id) : undefined;
 
-    const page =
-      typeof req.query.page === "number"
-        ? req.query.page
-        : typeof req.query.page === "string"
-        ? Number(req.query.page)
-        : 1;
+    const page = req.query.page !== undefined ? Number(req.query.page) : 1;
 
-    const take =
-      typeof req.query.take === "number"
-        ? req.query.take
-        : typeof req.query.take === "string"
-        ? Number(req.query.take)
-        : 10;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
     const useCase = container.resolve(ListTechnicalReportsUseCase);
     const result = await useCase.execute({

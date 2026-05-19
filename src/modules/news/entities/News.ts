@@ -41,5 +41,5 @@ export class News {
   content!: string;
 
   @Column({ type: "date" })
-  publication_date!: string;
+  publication_date!: Date;
 }

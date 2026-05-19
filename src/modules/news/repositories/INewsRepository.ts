@@ -3,7 +3,7 @@ export type NewsListItem = {
   title: string;
   description: string;
   content: string;
-  publication_date: string;
+  publication_date: Date;
 
   project: {
     id: number;
@@ -43,7 +43,7 @@ export interface ICreateNewsDTO {
   title: string;
   description: string;
   content: string;
-  publication_date: string;
+  publication_date: Date;
 }
 
 export interface IUpdateNewsDTO extends ICreateNewsDTO {

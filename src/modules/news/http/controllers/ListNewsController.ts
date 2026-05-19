@@ -7,26 +7,11 @@ export class ListNewsController {
     const search =
       typeof req.query.search === "string" ? req.query.search : undefined;
 
-    const page =
-      typeof req.query.page === "number"
-        ? req.query.page
-        : typeof req.query.page === "string"
-        ? Number(req.query.page)
-        : 1;
+    const page = req.query.page !== undefined ? Number(req.query.page) : 1;
 
-    const take =
-      typeof req.query.take === "number"
-        ? req.query.take
-        : typeof req.query.take === "string"
-        ? Number(req.query.take)
-        : 10;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
-    const project_id =
-      typeof req.query.project_id === "number"
-        ? req.query.project_id
-        : typeof req.query.project_id === "string"
-        ? Number(req.query.project_id)
-        : undefined;
+    const project_id = req.query.project_id !== undefined ? Number(req.query.project_id) : undefined;
 
     const useCase = container.resolve(ListNewsUseCase);
 

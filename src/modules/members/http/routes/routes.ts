@@ -16,6 +16,22 @@ const deleteController = new DeleteMemberController();
 
 const cpfRegex = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/;
 
+membersRoutes.get(
+  "/",
+  celebrate({
+    [Segments.QUERY]: Joi.object({
+      search: Joi.string().trim().min(1).max(180).optional(),
+      member_role_id: Joi.number().integer().positive().optional(),
+      organization_id: Joi.number().integer().positive().optional(),
+      page: Joi.number().integer().min(1).optional(),
+      take: Joi.number().integer().min(1).max(100).optional(),
+    }),
+  }),
+  listController.handle
+);
+
+membersRoutes.use(isAuthenticated);
+
 membersRoutes.post(
   "/",
   celebrate({
@@ -32,22 +48,6 @@ membersRoutes.post(
     }),
   }),
   createController.handle
-);
-
-membersRoutes.use(isAuthenticated);
-
-membersRoutes.get(
-  "/",
-  celebrate({
-    [Segments.QUERY]: Joi.object({
-      search: Joi.string().trim().min(1).max(180).optional(),
-      member_role_id: Joi.number().integer().positive().optional(),
-      organization_id: Joi.number().integer().positive().optional(),
-      page: Joi.number().integer().min(1).optional(),
-      take: Joi.number().integer().min(1).max(100).optional(),
-    }),
-  }),
-  listController.handle
 );
 
 membersRoutes.put(

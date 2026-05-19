@@ -35,13 +35,15 @@ export class NewsRepository implements INewsRepository {
       title: raw.n_title,
       description: raw.n_description,
       content: raw.n_content,
-      publication_date: raw.n_publication_date,
+      publication_date: new Date(raw.n_publication_date),
+
       project: raw.p_id
         ? {
             id: Number(raw.p_id),
             name: raw.p_name,
           }
         : null,
+
       member: {
         id: Number(raw.m_id),
         name: raw.m_name,
@@ -83,14 +85,15 @@ export class NewsRepository implements INewsRepository {
 
     qb.orderBy("n.publication_date", "DESC")
       .addOrderBy("n.title", "ASC")
-      .skip(skip)
-      .take(take);
+      .limit(take)
+      .offset(skip);
 
     if (project_id) {
       qb.andWhere("n.project_id = :project_id", { project_id });
     }
 
     const trimmed = search?.trim();
+
     if (trimmed) {
       qb.andWhere(
         `(n.title LIKE :s OR n.description LIKE :s OR n.content LIKE :s OR m.name LIKE :s OR p.name LIKE :s)`,
@@ -126,10 +129,19 @@ export class NewsRepository implements INewsRepository {
   }
 
   async update(data: IUpdateNewsDTO): Promise<void> {
-    await this.ormRepo.update({ id: data.id }, data);
+    const { id, ...updateData } = data;
+
+    await this.ormRepo.update({ id }, updateData);
   }
 
   async delete(id: number): Promise<void> {
-    await this.ormRepo.delete({ id });
+    await AppDataSource.transaction(async (manager) => {
+      await manager.query(
+        `DELETE FROM newshasresearcharea WHERE news_id = ?`,
+        [id]
+      );
+
+      await manager.delete(News, { id });
+    });
   }
 }
