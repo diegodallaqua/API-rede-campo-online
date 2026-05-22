@@ -24,6 +24,7 @@ import { technicalReportsRoutes } from "../../../../modules/technicalReports/htt
 import { booksRoutes } from "../../../../modules/books/http/routes/routes";
 import { bookChaptersRoutes } from "../../../../modules/bookChapters/http/routes/routes";
 import { researchAreasRoutes } from "../../../../modules/researchAreas/http/routes/routes";
+import { imagesRoutes } from "../../../../modules/images/http/routes/routes"; // added: image upload module
 
 export const routes = Router();
 
@@ -53,3 +54,4 @@ routes.use("/technical-reports", technicalReportsRoutes);
 routes.use("/books", booksRoutes);
 routes.use("/book-chapters", bookChaptersRoutes);
 routes.use("/research-areas", researchAreasRoutes);
+routes.use("/images", imagesRoutes); // added: image upload module

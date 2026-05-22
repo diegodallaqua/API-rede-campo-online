@@ -7,6 +7,20 @@ export type ProjectMemberItem = {
   id: number;
   name: string;
   email: string;
+  description: string;
+  lattes_url: string | null;
+  linked_in_url: string | null;
+  profile_picture: string | null;
+  memberRole: {
+    id: number;
+    name: string;
+  };
+  organization: {
+    id: number;
+    name: string;
+    logo: string;
+    address_id: number;
+  };
 };
 
 export interface IProjectHasMembersRepository {
