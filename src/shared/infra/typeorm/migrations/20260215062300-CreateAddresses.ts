@@ -62,7 +62,7 @@ export class CreateAddress20260215060000 implements MigrationInterface {
       new TableForeignKey({
         name: "FK_address_city",
         columnNames: ["city_id"],
-        referencedTableName: "cities",
+        referencedTableName: "city",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
