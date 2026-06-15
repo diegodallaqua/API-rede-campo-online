@@ -66,7 +66,7 @@ export class CreateNewsUseCase {
       title: title.trim(),
       description: description.trim(),
       content: content.trim(),
-      publication_date,
+      publication_date: publicationDate,
     });
 
     await this.newsHasResearchAreasRepository.createMany(
