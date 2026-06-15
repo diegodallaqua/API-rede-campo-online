@@ -1,7 +1,10 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { ProjectMedia } from "../entities/ProjectMedia";
-import { IProjectMediaRepository, IUpdateProjectMediaDTO } from "../repositories/IProjectMediaRepository";
+import {
+  IProjectMediaRepository,
+  IUpdateProjectMediaDTO,
+  ProjectMediaListItem,
+} from "../repositories/IProjectMediaRepository";
 import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 
 @injectable()
@@ -14,9 +17,9 @@ export class UpdateProjectMediaUseCase {
     private projectRepository: IProjectRepository
   ) {}
 
-  async execute(data: IUpdateProjectMediaDTO): Promise<ProjectMedia> {
-    const existing = await this.projectMediaRepository.findById(data.id);
-    if (!existing) throw new AppError("Project media not found", 404, "PROJECT_MEDIA_NOT_FOUND");
+  async execute(data: IUpdateProjectMediaDTO): Promise<ProjectMediaListItem> {
+    const exists = await this.projectMediaRepository.existsById(data.id);
+    if (!exists) throw new AppError("Project media not found", 404, "PROJECT_MEDIA_NOT_FOUND");
 
     const existsProject = await this.projectRepository.existsById(data.project_id);
     if (!existsProject) throw new AppError("Project not found", 404, "PROJECT_NOT_FOUND");

@@ -1,10 +1,13 @@
 import { Router } from "express";
 import { celebrate, Joi, Segments } from "celebrate";
 import { SessionsController } from "../controllers/SessionsController";
+import { LogoutController } from "../controllers/LogoutController";
+import { isAuthenticated } from "../../../../shared/infra/http/middlewares/isAuthenticated";
 
 export const sessionsRoutes = Router();
 
-const controller = new SessionsController();
+const sessionsController = new SessionsController();
+const logoutController = new LogoutController();
 
 sessionsRoutes.post(
   "/",
@@ -14,5 +17,7 @@ sessionsRoutes.post(
       password: Joi.string().min(8).max(100).required(),
     }),
   }),
-  controller.handle
+  sessionsController.handle
 );
+
+sessionsRoutes.delete("/", isAuthenticated, logoutController.handle);

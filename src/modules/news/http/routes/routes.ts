@@ -20,7 +20,6 @@ newsRoutes.get(
   "/",
   celebrate({
     [Segments.QUERY]: Joi.object({
-      project_id: Joi.number().integer().positive().optional(),
       search: Joi.string().trim().min(1).max(255).optional(),
       page: Joi.number().integer().min(1).optional(),
       take: Joi.number().integer().min(1).max(100).optional(),
@@ -35,7 +34,6 @@ newsRoutes.post(
   "/",
   celebrate({
     [Segments.BODY]: Joi.object({
-      project_id: Joi.number().integer().positive().optional().allow(null),
       member_id: Joi.number().integer().positive().required(),
       title: Joi.string().trim().min(2).max(180).required(),
       description: Joi.string().trim().min(2).max(1000).required(),
@@ -57,7 +55,6 @@ newsRoutes.put(
       id: Joi.number().integer().positive().required(),
     }),
     [Segments.BODY]: Joi.object({
-      project_id: Joi.number().integer().positive().optional().allow(null),
       member_id: Joi.number().integer().positive().required(),
       title: Joi.string().trim().min(2).max(180).required(),
       description: Joi.string().trim().min(2).max(1000).required(),

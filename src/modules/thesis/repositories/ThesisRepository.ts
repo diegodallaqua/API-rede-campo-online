@@ -1,23 +1,23 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../../shared/infra/database/data-source";
-import { TechnicalReport } from "../entities/TechnicalReport";
+import { Thesis } from "../entities/Thesis";
 import {
-  ITechnicalReportRepository,
-  ICreateTechnicalReportDTO,
-  IUpdateTechnicalReportDTO,
+  IThesisRepository,
+  ICreateThesisDTO,
+  IUpdateThesisDTO,
   PaginateParams,
-  TechnicalReportPaginateProperties,
-  TechnicalReportListItem,
-} from "./ITechnicalReportRepository";
+  ThesisPaginateProperties,
+  ThesisListItem,
+} from "./IThesisRepository";
 
-export class TechnicalReportRepository implements ITechnicalReportRepository {
-  private ormRepo: Repository<TechnicalReport>;
+export class ThesisRepository implements IThesisRepository {
+  private ormRepo: Repository<Thesis>;
 
   constructor() {
-    this.ormRepo = AppDataSource.getRepository(TechnicalReport);
+    this.ormRepo = AppDataSource.getRepository(Thesis);
   }
 
-  async create(data: ICreateTechnicalReportDTO): Promise<void> {
+  async create(data: ICreateThesisDTO): Promise<void> {
     const entity = this.ormRepo.create(data);
     await this.ormRepo.save(entity);
   }
@@ -27,7 +27,7 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
     return count > 0;
   }
 
-  private mapRawToItem(raw: any): TechnicalReportListItem {
+  private mapRawToItem(raw: any): ThesisListItem {
     return {
       number_of_pages: Number(raw.tr_number_of_pages),
 
@@ -73,12 +73,10 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
     page,
     skip,
     take,
-  }: PaginateParams): Promise<TechnicalReportPaginateProperties> {
+  }: PaginateParams): Promise<ThesisPaginateProperties> {
     const qb = this.baseQuery()
       .orderBy("p.title", "ASC")
-      .addOrderBy("p.publication_date", "DESC")
-      .skip(skip)
-      .take(take);
+      .addOrderBy("p.publication_date", "DESC");
 
     if (organization_id) {
       qb.andWhere("tr.organization_id = :organization_id", { organization_id });
@@ -91,9 +89,12 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
       });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -104,7 +105,7 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
     };
   }
 
-  async findByIdWithRelations(publication_id: number): Promise<TechnicalReportListItem | null> {
+  async findByIdWithRelations(publication_id: number): Promise<ThesisListItem | null> {
     const qb = this.baseQuery().where("tr.publication_id = :publication_id", {
       publication_id,
     });
@@ -114,7 +115,7 @@ export class TechnicalReportRepository implements ITechnicalReportRepository {
     return raw ? this.mapRawToItem(raw) : null;
   }
 
-  async update(data: IUpdateTechnicalReportDTO): Promise<void> {
+  async update(data: IUpdateThesisDTO): Promise<void> {
     await this.ormRepo.update(
       { publication_id: data.publication_id },
       {

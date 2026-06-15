@@ -10,7 +10,7 @@ export class CreateEvents20260304120000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "events",
+        name: "event",
         columns: [
           {
             name: "id",
@@ -30,11 +30,11 @@ export class CreateEvents20260304120000 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      "events",
+      "event",
       new TableForeignKey({
         name: "FK_events_address",
         columnNames: ["address_id"],
-        referencedTableName: "addresses",
+        referencedTableName: "address",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -42,11 +42,11 @@ export class CreateEvents20260304120000 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      "events",
+      "event",
       new TableForeignKey({
         name: "FK_events_project",
         columnNames: ["project_id"],
-        referencedTableName: "projects",
+        referencedTableName: "project",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -54,7 +54,7 @@ export class CreateEvents20260304120000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "events",
+      "event",
       new TableIndex({
         name: "IDX_events_project_id",
         columnNames: ["project_id"],
@@ -62,7 +62,7 @@ export class CreateEvents20260304120000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "events",
+      "event",
       new TableIndex({
         name: "IDX_events_address_id",
         columnNames: ["address_id"],
@@ -70,7 +70,7 @@ export class CreateEvents20260304120000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "events",
+      "event",
       new TableIndex({
         name: "IDX_events_date",
         columnNames: ["date"],
@@ -79,6 +79,6 @@ export class CreateEvents20260304120000 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("events");
+    await queryRunner.dropTable("event");
   }
 }

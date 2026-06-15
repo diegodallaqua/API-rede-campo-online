@@ -6,51 +6,27 @@ import {
   TableIndex,
 } from "typeorm";
 
-export class CreatePublicationContributors20260311030000
-  implements MigrationInterface
-{
+export class CreatePublicationContributors20260311030000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "publication_contributors",
+        name: "publicationcontributor",
         columns: [
-          {
-            name: "publication_id",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
-          {
-            name: "author_order",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
-          {
-            name: "member_id",
-            type: "int",
-            isNullable: true,
-          },
-          {
-            name: "external_author_id",
-            type: "int",
-            isNullable: true,
-          },
-          {
-            name: "contributor_role_id",
-            type: "int",
-            isNullable: false,
-          },
+          { name: "publication_id", type: "int", isPrimary: true, isNullable: false },
+          { name: "author_order", type: "int", isPrimary: true, isNullable: false },
+          { name: "member_id", type: "int", isNullable: true },
+          { name: "external_author_id", type: "int", isNullable: true },
+          { name: "contributor_role_id", type: "int", isNullable: false },
         ],
       })
     );
 
     await queryRunner.createForeignKey(
-      "publication_contributors",
+      "publicationcontributor",
       new TableForeignKey({
         name: "FK_publication_contributors_publication",
         columnNames: ["publication_id"],
-        referencedTableName: "publications",
+        referencedTableName: "publication",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -58,11 +34,11 @@ export class CreatePublicationContributors20260311030000
     );
 
     await queryRunner.createForeignKey(
-      "publication_contributors",
+      "publicationcontributor",
       new TableForeignKey({
         name: "FK_publication_contributors_member",
         columnNames: ["member_id"],
-        referencedTableName: "members",
+        referencedTableName: "member",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -70,11 +46,11 @@ export class CreatePublicationContributors20260311030000
     );
 
     await queryRunner.createForeignKey(
-      "publication_contributors",
+      "publicationcontributor",
       new TableForeignKey({
         name: "FK_publication_contributors_external_author",
         columnNames: ["external_author_id"],
-        referencedTableName: "external_authors",
+        referencedTableName: "externalauthor",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -82,11 +58,11 @@ export class CreatePublicationContributors20260311030000
     );
 
     await queryRunner.createForeignKey(
-      "publication_contributors",
+      "publicationcontributor",
       new TableForeignKey({
         name: "FK_publication_contributors_contributor_role",
         columnNames: ["contributor_role_id"],
-        referencedTableName: "contributor_roles",
+        referencedTableName: "contributorrole",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -94,7 +70,7 @@ export class CreatePublicationContributors20260311030000
     );
 
     await queryRunner.createIndex(
-      "publication_contributors",
+      "publicationcontributor",
       new TableIndex({
         name: "IDX_publication_contributors_publication_author_order_unique",
         columnNames: ["publication_id", "author_order"],
@@ -103,7 +79,7 @@ export class CreatePublicationContributors20260311030000
     );
 
     await queryRunner.createIndex(
-      "publication_contributors",
+      "publicationcontributor",
       new TableIndex({
         name: "IDX_publication_contributors_publication_member_role_unique",
         columnNames: ["publication_id", "member_id", "contributor_role_id"],
@@ -112,7 +88,7 @@ export class CreatePublicationContributors20260311030000
     );
 
     await queryRunner.createIndex(
-      "publication_contributors",
+      "publicationcontributor",
       new TableIndex({
         name: "IDX_publication_contributors_publication_external_role_unique",
         columnNames: ["publication_id", "external_author_id", "contributor_role_id"],
@@ -122,6 +98,6 @@ export class CreatePublicationContributors20260311030000
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("publication_contributors");
+    await queryRunner.dropTable("publicationcontributor");
   }
 }

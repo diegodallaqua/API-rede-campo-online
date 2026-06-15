@@ -35,7 +35,7 @@ export class CreateMembers20260216032200 implements MigrationInterface {
       new TableForeignKey({
         name: "FK_members_member_role",
         columnNames: ["member_role_id"],
-        referencedTableName: "member_roles",
+        referencedTableName: "memberrole",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -47,7 +47,7 @@ export class CreateMembers20260216032200 implements MigrationInterface {
       new TableForeignKey({
         name: "FK_members_organization",
         columnNames: ["organization_id"],
-        referencedTableName: "organizations",
+        referencedTableName: "organization",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",

@@ -18,7 +18,7 @@ imagesRoutes.post(
   uploadMiddleware("file"),
   celebrate({
     [Segments.BODY]: Joi.object({
-      entityType: Joi.string().trim().valid("event", "news", "project").required(),
+      entityType: Joi.string().trim().valid("event", "news", "project", "book", "member").required(),
       entityId: Joi.string().trim().min(1).max(36).required(),
     }),
   }),

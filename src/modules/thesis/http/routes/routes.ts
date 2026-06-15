@@ -2,19 +2,19 @@ import { Router } from "express";
 import { celebrate, Joi, Segments } from "celebrate";
 import { isAuthenticated } from "../../../../shared/infra/http/middlewares/isAuthenticated";
 
-import { CreateTechnicalReportController } from "../controllers/CreateTechnicalReportController";
-import { ListTechnicalReportsController } from "../controllers/ListTechnicalReportsController";
-import { UpdateTechnicalReportController } from "../controllers/UpdateTechnicalReportController";
-import { DeleteTechnicalReportController } from "../controllers/DeleteTechnicalReportController";
+import { CreateThesisController } from "../controllers/CreateThesisController";
+import { ListThesisController } from "../controllers/ListThesisController";
+import { UpdateThesisController } from "../controllers/UpdateThesisController";
+import { DeleteThesisController } from "../controllers/DeleteThesisController";
 
-export const technicalReportsRoutes = Router();
+export const thesisRoutes = Router();
 
-const createController = new CreateTechnicalReportController();
-const listController = new ListTechnicalReportsController();
-const updateController = new UpdateTechnicalReportController();
-const deleteController = new DeleteTechnicalReportController();
+const createController = new CreateThesisController();
+const listController = new ListThesisController();
+const updateController = new UpdateThesisController();
+const deleteController = new DeleteThesisController();
 
-technicalReportsRoutes.get(
+thesisRoutes.get(
   "/",
   celebrate({
     [Segments.QUERY]: Joi.object({
@@ -27,9 +27,9 @@ technicalReportsRoutes.get(
   listController.handle
 );
 
-technicalReportsRoutes.use(isAuthenticated);
+thesisRoutes.use(isAuthenticated);
 
-technicalReportsRoutes.post(
+thesisRoutes.post(
   "/",
   celebrate({
     [Segments.BODY]: Joi.object({
@@ -41,7 +41,7 @@ technicalReportsRoutes.post(
   createController.handle
 );
 
-technicalReportsRoutes.put(
+thesisRoutes.put(
   "/:publication_id",
   celebrate({
     [Segments.PARAMS]: Joi.object({
@@ -55,7 +55,7 @@ technicalReportsRoutes.put(
   updateController.handle
 );
 
-technicalReportsRoutes.delete(
+thesisRoutes.delete(
   "/:publication_id",
   celebrate({
     [Segments.PARAMS]: Joi.object({

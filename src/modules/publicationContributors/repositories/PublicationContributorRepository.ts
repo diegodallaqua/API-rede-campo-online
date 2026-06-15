@@ -8,6 +8,7 @@ import {
   PaginateParams,
   PublicationContributorPaginateProperties,
   PublicationContributorListItem,
+  PublicationContributorEmbedItem,
 } from "./IPublicationContributorRepository";
 
 export class PublicationContributorRepository
@@ -109,6 +110,7 @@ export class PublicationContributorRepository
             id: Number(raw.m_id),
             name: raw.m_name,
             email: raw.m_email,
+            profile_picture: raw.m_profile_picture ?? null,
           }
         : null,
 
@@ -145,6 +147,7 @@ export class PublicationContributorRepository
         "m.id as m_id",
         "m.name as m_name",
         "m.email as m_email",
+        "m.profile_picture as m_profile_picture",
 
         "ea.id as ea_id",
         "ea.name as ea_name",
@@ -161,17 +164,18 @@ export class PublicationContributorRepository
   }: PaginateParams): Promise<PublicationContributorPaginateProperties> {
     const qb = this.baseQuery()
       .orderBy("pc.publication_id", "ASC")
-      .addOrderBy("pc.author_order", "ASC")
-      .skip(skip)
-      .take(take);
+      .addOrderBy("pc.author_order", "ASC");
 
     if (publication_id) {
       qb.andWhere("pc.publication_id = :publication_id", { publication_id });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -191,6 +195,72 @@ export class PublicationContributorRepository
     const raw = await qb.getRawOne();
 
     return raw ? this.mapRawToItem(raw) : null;
+  }
+
+  async findByPublicationId(publication_id: number): Promise<PublicationContributorEmbedItem[]> {
+    const rows = await this.ormRepo
+      .createQueryBuilder("pc")
+      .innerJoin("pc.contributorRole", "cr")
+      .leftJoin("pc.member", "m")
+      .leftJoin("m.memberRole", "mr")
+      .leftJoin("m.organization", "o")
+      .leftJoin("pc.externalAuthor", "ea")
+      .select([
+        "pc.author_order as pc_author_order",
+        "cr.id as cr_id",
+        "cr.name as cr_name",
+        "m.id as m_id",
+        "m.name as m_name",
+        "m.email as m_email",
+        "m.description as m_description",
+        "m.lattes_url as m_lattes_url",
+        "m.linked_in_url as m_linked_in_url",
+        "m.profile_picture as m_profile_picture",
+        "mr.id as mr_id",
+        "mr.name as mr_name",
+        "o.id as o_id",
+        "o.name as o_name",
+        "o.logo as o_logo",
+        "o.address_id as o_address_id",
+        "ea.id as ea_id",
+        "ea.name as ea_name",
+        "ea.email as ea_email",
+        "ea.orcid as ea_orcid",
+      ])
+      .where("pc.publication_id = :publication_id", { publication_id })
+      .orderBy("pc.author_order", "ASC")
+      .getRawMany();
+
+    return rows.map((raw) => ({
+      author_order: Number(raw.pc_author_order),
+      contributor_role: { id: Number(raw.cr_id), name: raw.cr_name },
+      member: raw.m_id
+        ? {
+            id: Number(raw.m_id),
+            name: raw.m_name,
+            email: raw.m_email,
+            description: raw.m_description,
+            lattes_url: raw.m_lattes_url ?? null,
+            linked_in_url: raw.m_linked_in_url ?? null,
+            profile_picture: raw.m_profile_picture ?? null,
+            member_role: { id: Number(raw.mr_id), name: raw.mr_name },
+            organization: {
+              id: Number(raw.o_id),
+              name: raw.o_name,
+              logo: raw.o_logo,
+              address_id: Number(raw.o_address_id),
+            },
+          }
+        : null,
+      external_author: raw.ea_id
+        ? {
+            id: Number(raw.ea_id),
+            name: raw.ea_name,
+            email: raw.ea_email ?? null,
+            orcid: raw.ea_orcid ?? null,
+          }
+        : null,
+    }));
   }
 
   async update(data: IUpdatePublicationContributorDTO): Promise<void> {

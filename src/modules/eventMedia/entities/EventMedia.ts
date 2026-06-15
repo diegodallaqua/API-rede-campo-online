@@ -17,7 +17,7 @@ export class EventMedia {
   @Column({ type: "int" })
   event_id!: number;
 
-  @ManyToOne(() => Event, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @ManyToOne(() => Event, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "event_id" })
   event!: Event;
 

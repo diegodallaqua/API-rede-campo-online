@@ -19,38 +19,12 @@ export class CreateNews20260308013000 implements MigrationInterface {
             isGenerated: true,
             generationStrategy: "increment",
           },
-          {
-            name: "project_id",
-            type: "int",
-            isNullable: true,
-          },
-          {
-            name: "member_id",
-            type: "int",
-            isNullable: false,
-          },
-          {
-            name: "title",
-            type: "varchar",
-            length: "180",
-            isNullable: false,
-          },
-          {
-            name: "description",
-            type: "varchar",
-            length: "1000",
-            isNullable: false,
-          },
-          {
-            name: "content",
-            type: "text",
-            isNullable: false,
-          },
-          {
-            name: "publication_date",
-            type: "date",
-            isNullable: false,
-          },
+          { name: "project_id", type: "int", isNullable: true },
+          { name: "member_id", type: "int", isNullable: false },
+          { name: "title", type: "varchar", length: "180", isNullable: false },
+          { name: "description", type: "varchar", length: "1000", isNullable: false },
+          { name: "content", type: "text", isNullable: false },
+          { name: "publication_date", type: "date", isNullable: false },
         ],
       })
     );
@@ -60,7 +34,7 @@ export class CreateNews20260308013000 implements MigrationInterface {
       new TableForeignKey({
         name: "FK_news_project",
         columnNames: ["project_id"],
-        referencedTableName: "projects",
+        referencedTableName: "project",
         referencedColumnNames: ["id"],
         onDelete: "SET NULL",
         onUpdate: "CASCADE",
@@ -72,7 +46,7 @@ export class CreateNews20260308013000 implements MigrationInterface {
       new TableForeignKey({
         name: "FK_news_member",
         columnNames: ["member_id"],
-        referencedTableName: "members",
+        referencedTableName: "member",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -81,26 +55,17 @@ export class CreateNews20260308013000 implements MigrationInterface {
 
     await queryRunner.createIndex(
       "news",
-      new TableIndex({
-        name: "IDX_news_project_id",
-        columnNames: ["project_id"],
-      })
+      new TableIndex({ name: "IDX_news_project_id", columnNames: ["project_id"] })
     );
 
     await queryRunner.createIndex(
       "news",
-      new TableIndex({
-        name: "IDX_news_member_id",
-        columnNames: ["member_id"],
-      })
+      new TableIndex({ name: "IDX_news_member_id", columnNames: ["member_id"] })
     );
 
     await queryRunner.createIndex(
       "news",
-      new TableIndex({
-        name: "IDX_news_publication_date",
-        columnNames: ["publication_date"],
-      })
+      new TableIndex({ name: "IDX_news_publication_date", columnNames: ["publication_date"] })
     );
   }
 

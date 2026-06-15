@@ -9,11 +9,6 @@ export type NewsMediaListItem = {
     description: string;
     content: string;
     publication_date: string;
-    project: {
-      id: number;
-      name: string;
-      status: boolean;
-    } | null;
   };
 };
 

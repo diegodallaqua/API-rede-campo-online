@@ -133,9 +133,7 @@ export class EventMediaRepository implements IEventMediaRepository {
         "s.id as s_id",
         "s.name as s_name",
       ])
-      .orderBy("em.name", "ASC")
-      .skip(skip)
-      .take(take);
+      .orderBy("em.name", "ASC");
 
     if (event_id) {
       qb.andWhere("em.event_id = :eid", { eid: event_id });
@@ -149,9 +147,12 @@ export class EventMediaRepository implements IEventMediaRepository {
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

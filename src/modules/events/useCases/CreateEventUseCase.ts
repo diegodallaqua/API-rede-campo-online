@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { ICreateEventDTO, IEventRepository } from "../repositories/IEventRepository";
+import { EventListItem, ICreateEventDTO, IEventRepository } from "../repositories/IEventRepository";
 import { IAddressRepository } from "../../addresses/repositories/IAddressRepository";
 import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 
@@ -17,7 +17,7 @@ export class CreateEventUseCase {
     private projectRepository: IProjectRepository
   ) {}
 
-  async execute(data: ICreateEventDTO): Promise<void> {
+  async execute(data: ICreateEventDTO): Promise<EventListItem> {
     const address = await this.addressRepository.findById(data.address_id);
     if (!address) throw new AppError("Address not found", 404, "ADDRESS_NOT_FOUND");
 
@@ -29,7 +29,7 @@ export class CreateEventUseCase {
       throw new AppError("Invalid date", 400, "INVALID_DATE");
     }
 
-    await this.eventRepository.create({
+    const id = await this.eventRepository.create({
       address_id: data.address_id,
       project_id: data.project_id,
       name: data.name.trim(),
@@ -37,5 +37,10 @@ export class CreateEventUseCase {
       description: data.description?.trim() ?? null,
       registration_url: data.registration_url?.trim() ?? null,
     });
+
+    const event = await this.eventRepository.findByIdWithRelations(id);
+    if (!event) throw new AppError("Event not found", 404, "EVENT_NOT_FOUND");
+
+    return event;
   }
 }

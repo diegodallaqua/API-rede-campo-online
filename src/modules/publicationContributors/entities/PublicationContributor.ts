@@ -22,7 +22,7 @@ export class PublicationContributor {
   @PrimaryColumn({ type: "int" })
   author_order!: number;
 
-  @ManyToOne(() => Publication, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @ManyToOne(() => Publication, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "publication_id" })
   publication!: Publication;
 

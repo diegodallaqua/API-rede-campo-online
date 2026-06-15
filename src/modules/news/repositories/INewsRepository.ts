@@ -5,15 +5,13 @@ export type NewsListItem = {
   content: string;
   publication_date: Date;
 
-  project: {
-    id: number;
-    name: string;
-  } | null;
-
   member: {
     id: number;
     name: string;
     email: string;
+    member_role: { id: number; name: string };
+    profile_picture?: string | null;
+    organization: { id: number; name: string };
   };
 
   research_areas?: {
@@ -27,7 +25,6 @@ export type PaginateParams = {
   page: number;
   skip: number;
   take: number;
-  project_id?: number;
 };
 
 export type NewsPaginateProperties = {
@@ -38,7 +35,6 @@ export type NewsPaginateProperties = {
 };
 
 export interface ICreateNewsDTO {
-  project_id?: number | null;
   member_id: number;
   title: string;
   description: string;

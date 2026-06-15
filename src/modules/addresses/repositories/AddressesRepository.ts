@@ -68,9 +68,7 @@ export class AddressRepository implements IAddressRepository {
     city_id,
   }: PaginateParams): Promise<AddressesPaginateProperties> {
     const qb = this.baseQuery()
-      .orderBy("a.street", "ASC")
-      .skip(skip)
-      .take(take);
+      .orderBy("a.street", "ASC");
 
     if (city_id) {
       qb.andWhere("a.city_id = :city_id", { city_id });
@@ -83,9 +81,12 @@ export class AddressRepository implements IAddressRepository {
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

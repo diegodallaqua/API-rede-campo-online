@@ -1,7 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { Publication } from "../entities/Publication";
-import { IPublicationRepository } from "../repositories/IPublicationRepository";
+import {
+  IPublicationRepository,
+  PublicationWithResearchAreas,
+} from "../repositories/IPublicationRepository";
 import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
 import { IPublicationHasResearchAreasRepository } from "../../publicationHasResearchAreas/repositories/IPublicationHasResearchAreaRepository";
 
@@ -32,7 +34,7 @@ export class CreatePublicationUseCase {
     publication_date,
     doi,
     research_area_ids = [],
-  }: IRequest): Promise<Publication> {
+  }: IRequest): Promise<PublicationWithResearchAreas> {
     const parsedDate = new Date(publication_date);
     if (Number.isNaN(parsedDate.getTime())) {
       throw new AppError("Invalid publication_date", 400, "INVALID_PUBLICATION_DATE");
@@ -74,6 +76,20 @@ export class CreatePublicationUseCase {
       }))
     );
 
-    return publication;
+    const researchAreas =
+      await this.publicationHasResearchAreasRepository.findResearchAreasByPublicationId(
+        publication.id
+      );
+
+    return {
+      id: publication.id,
+      title: publication.title,
+      abstract: publication.abstract,
+      publication_date: publication.publication_date,
+      doi: publication.doi ?? null,
+      details: null,
+      research_areas: researchAreas,
+      contributors: [],
+    };
   }
 }

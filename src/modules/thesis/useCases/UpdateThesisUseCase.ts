@@ -1,17 +1,17 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
 import {
-  ITechnicalReportRepository,
-  ICreateTechnicalReportDTO,
-} from "../repositories/ITechnicalReportRepository";
+  IThesisRepository,
+  IUpdateThesisDTO,
+} from "../repositories/IThesisRepository";
 import { IPublicationRepository } from "../../publications/repositories/IPublicationRepository";
 import { IOrganizationRepository } from "../../organizations/repositories/IOrganizationRepository";
 
 @injectable()
-export class CreateTechnicalReportUseCase {
+export class UpdateThesisUseCase {
   constructor(
-    @inject("TechnicalReportRepository")
-    private technicalReportRepository: ITechnicalReportRepository,
+    @inject("ThesisRepository")
+    private thesisRepository: IThesisRepository,
 
     @inject("PublicationRepository")
     private publicationRepository: IPublicationRepository,
@@ -20,7 +20,7 @@ export class CreateTechnicalReportUseCase {
     private organizationRepository: IOrganizationRepository
   ) {}
 
-  async execute(data: ICreateTechnicalReportDTO): Promise<void> {
+  async execute(data: IUpdateThesisDTO): Promise<void> {
     const publication = await this.publicationRepository.findById(data.publication_id);
     if (!publication) {
       throw new AppError("Publication not found", 404, "PUBLICATION_NOT_FOUND");
@@ -31,15 +31,11 @@ export class CreateTechnicalReportUseCase {
       throw new AppError("Organization not found", 404, "ORG_NOT_FOUND");
     }
 
-    const alreadyExists = await this.technicalReportRepository.existsByPublicationId(
+    const exists = await this.thesisRepository.existsByPublicationId(
       data.publication_id
     );
-    if (alreadyExists) {
-      throw new AppError(
-        "Technical report already exists for this publication",
-        409,
-        "TECHNICAL_REPORT_ALREADY_EXISTS"
-      );
+    if (!exists) {
+      throw new AppError("Thesis not found", 404, "THESIS_NOT_FOUND");
     }
 
     if (data.number_of_pages <= 0) {
@@ -50,7 +46,7 @@ export class CreateTechnicalReportUseCase {
       );
     }
 
-    await this.technicalReportRepository.create({
+    await this.thesisRepository.update({
       publication_id: data.publication_id,
       organization_id: data.organization_id,
       number_of_pages: data.number_of_pages,

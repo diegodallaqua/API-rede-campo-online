@@ -10,8 +10,8 @@ export class DeleteProjectMediaUseCase {
   ) {}
 
   async execute(id: number): Promise<void> {
-    const existing = await this.projectMediaRepository.findById(id);
-    if (!existing) throw new AppError("Project media not found", 404, "PROJECT_MEDIA_NOT_FOUND");
+    const exists = await this.projectMediaRepository.existsById(id);
+    if (!exists) throw new AppError("Project media not found", 404, "PROJECT_MEDIA_NOT_FOUND");
 
     await this.projectMediaRepository.delete(id);
   }

@@ -44,13 +44,13 @@ export type ProjectMediaPaginateProperties = {
 };
 
 export interface IProjectMediaRepository {
-  create(data: ICreateProjectMediaDTO): Promise<void>;
+  create(data: ICreateProjectMediaDTO): Promise<ProjectMediaListItem>;
 
   findAll(params: PaginateParams): Promise<ProjectMediaPaginateProperties>;
 
   findByIdWithRelations(id: number): Promise<ProjectMediaListItem | null>;
 
-  update(data: IUpdateProjectMediaDTO): Promise<void>;
+  update(data: IUpdateProjectMediaDTO): Promise<ProjectMediaListItem>;
 
   delete(id: number): Promise<void>;
 

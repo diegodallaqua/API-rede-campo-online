@@ -22,9 +22,10 @@ export class EventRepository implements IEventRepository {
     date: Date;
     description?: string | null;
     registration_url?: string | null;
-  }): Promise<void> {
+  }): Promise<number> {
     const entity = this.ormRepo.create(data);
-    await this.ormRepo.save(entity);
+    const saved = await this.ormRepo.save(entity);
+    return saved.id;
   }
 
   async existsById(id: number): Promise<boolean> {
@@ -117,6 +118,8 @@ export class EventRepository implements IEventRepository {
     skip,
     take,
     project_id,
+    date_from,
+    date_to,
   }: PaginateParams): Promise<EventsPaginateProperties> {
     const qb = this.ormRepo
       .createQueryBuilder("e")
@@ -128,10 +131,18 @@ export class EventRepository implements IEventRepository {
 
     this.baseSelect(qb);
 
-    qb.orderBy("e.date", "DESC").skip(skip).take(take);
+    qb.orderBy("e.date", "DESC");
 
     if (project_id) {
       qb.andWhere("e.project_id = :pid", { pid: project_id });
+    }
+
+    if (date_from) {
+      qb.andWhere("e.date >= :date_from", { date_from });
+    }
+
+    if (date_to) {
+      qb.andWhere("e.date <= :date_to", { date_to });
     }
 
     const trimmed = search?.trim();
@@ -142,9 +153,12 @@ export class EventRepository implements IEventRepository {
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

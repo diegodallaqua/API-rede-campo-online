@@ -10,13 +10,13 @@ import {
 import { Publication } from "../../publications/entities/Publication";
 import { Organization } from "../../organizations/entities/Organization";
 
-@Entity("technicalreport")
+@Entity("thesis")
 @Index(["organization_id"])
-export class TechnicalReport {
+export class Thesis {
   @PrimaryColumn({ type: "int" })
   publication_id!: number;
 
-  @OneToOne(() => Publication, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @OneToOne(() => Publication, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "publication_id" })
   publication!: Publication;
 

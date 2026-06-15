@@ -17,7 +17,7 @@ export class ProjectMedia {
   @Column({ type: "int" })
   project_id!: number;
 
-  @ManyToOne(() => Project, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @ManyToOne(() => Project, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "project_id" })
   project!: Project;
 

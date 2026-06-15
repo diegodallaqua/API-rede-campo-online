@@ -53,9 +53,7 @@ export class CityRepository implements ICityRepository {
     state_id,
   }: PaginateParams): Promise<CitiesPaginateProperties> {
     const qb = this.baseQuery()
-      .orderBy("c.name", "ASC")
-      .skip(skip)
-      .take(take);
+      .orderBy("c.name", "ASC");
 
     if (state_id) {
       qb.andWhere("c.state_id = :state_id", { state_id });
@@ -65,9 +63,12 @@ export class CityRepository implements ICityRepository {
       qb.andWhere("c.name LIKE :search", { search: `%${search.trim()}%` });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

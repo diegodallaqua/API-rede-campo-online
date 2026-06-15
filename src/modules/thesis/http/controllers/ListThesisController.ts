@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { ListTechnicalReportsUseCase } from "../../useCases/ListTechnicalReportsUseCase";
+import { ListThesisUseCase } from "../../useCases/ListThesisUseCase";
 
-export class ListTechnicalReportsController {
+export class ListThesisController {
   async handle(req: Request, res: Response): Promise<Response> {
     const title =
       typeof req.query.title === "string" ? req.query.title : undefined;
@@ -13,7 +13,7 @@ export class ListTechnicalReportsController {
 
     const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
-    const useCase = container.resolve(ListTechnicalReportsUseCase);
+    const useCase = container.resolve(ListThesisUseCase);
     const result = await useCase.execute({
       title,
       organization_id,

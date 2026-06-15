@@ -35,7 +35,7 @@ export class Member {
   @Column({ type: "varchar", length: 180 })
   email!: string;
 
-  @Column({ type: "varchar", length: 600 })
+  @Column({ type: "varchar", length: 2000 })
   description!: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })

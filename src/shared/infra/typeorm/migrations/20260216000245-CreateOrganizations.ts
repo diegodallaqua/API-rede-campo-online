@@ -10,7 +10,7 @@ export class CreateOrganizations20260216000245 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "organizations",
+        name: "organization",
         columns: [
           {
             name: "id",
@@ -42,11 +42,11 @@ export class CreateOrganizations20260216000245 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      "organizations",
+      "organization",
       new TableForeignKey({
         name: "FK_organizations_address",
         columnNames: ["address_id"],
-        referencedTableName: "addresses",
+        referencedTableName: "address",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -54,7 +54,7 @@ export class CreateOrganizations20260216000245 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "organizations",
+      "organization",
       new TableIndex({
         name: "IDX_organizations_address_id",
         columnNames: ["address_id"],
@@ -62,7 +62,7 @@ export class CreateOrganizations20260216000245 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "organizations",
+      "organization",
       new TableIndex({
         name: "IDX_organizations_name",
         columnNames: ["name"],
@@ -72,6 +72,6 @@ export class CreateOrganizations20260216000245 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("organizations");
+    await queryRunner.dropTable("organization");
   }
 }

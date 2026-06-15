@@ -71,9 +71,7 @@ export class ArticleRepository implements IArticleRepository {
   }: PaginateParams): Promise<ArticlePaginateProperties> {
     const qb = this.baseQuery()
       .orderBy("p.id", "ASC")
-      .addOrderBy("p.publication_date", "ASC")
-      .skip(skip)
-      .take(take);
+      .addOrderBy("p.publication_date", "ASC");
 
     const trimmed = title?.trim();
     if (trimmed) {
@@ -82,9 +80,12 @@ export class ArticleRepository implements IArticleRepository {
       });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

@@ -4,7 +4,7 @@ export class CreateMemberRoles20260216010400 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "memberRoles",
+        name: "memberrole",
         columns: [
           {
             name: "id",
@@ -25,9 +25,9 @@ export class CreateMemberRoles20260216010400 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "member_roles",
+      "memberrole",
       new TableIndex({
-        name: "IDX_member_roles_name",
+        name: "IDX_memberrole_name",
         columnNames: ["name"],
         isUnique: true,
       })
@@ -35,6 +35,6 @@ export class CreateMemberRoles20260216010400 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("member_roles");
+    await queryRunner.dropTable("memberrole");
   }
 }

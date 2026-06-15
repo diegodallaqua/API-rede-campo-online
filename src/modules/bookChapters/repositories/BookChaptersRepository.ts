@@ -65,9 +65,7 @@ export class BookChapterRepository implements IBookChapterRepository {
   }: PaginateParams): Promise<BookChapterPaginateProperties> {
     const qb = this.baseQuery()
       .orderBy("p.id", "ASC")
-      .addOrderBy("p.publication_date", "ASC")
-      .skip(skip)
-      .take(take);
+      .addOrderBy("p.publication_date", "ASC");
 
     const trimmed = title?.trim();
     if (trimmed) {
@@ -76,9 +74,12 @@ export class BookChapterRepository implements IBookChapterRepository {
       });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

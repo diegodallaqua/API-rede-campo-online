@@ -17,7 +17,7 @@ type IResponse = {
     id: number;
     name: string;
     email: string;
-    memberRole: { id: number; name: string };
+    member_role: { id: number; name: string };
     organization: { id: number; name: string; logo: string; address_id: number };
   };
 };
@@ -45,7 +45,7 @@ export class AuthenticateMemberUseCase {
 
     const token = sign(
       {
-        role_id: member.memberRole.id,
+        role_id: member.member_role.id,
         organization_id: member.organization.id,
       },
       authConfig.jwt.secret,
@@ -61,7 +61,7 @@ export class AuthenticateMemberUseCase {
         id: member.id,
         name: member.name,
         email: member.email,
-        memberRole: member.memberRole,
+        member_role: member.member_role,
         organization: member.organization,
       },
     };

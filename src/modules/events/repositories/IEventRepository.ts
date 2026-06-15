@@ -42,6 +42,8 @@ export type PaginateParams = {
   skip: number;
   take: number;
   project_id?: number;
+  date_from?: string;
+  date_to?: string;
 };
 
 export type EventsPaginateProperties = {
@@ -72,7 +74,7 @@ export interface IEventRepository {
     date: Date;
     description?: string | null;
     registration_url?: string | null;
-  }): Promise<void>;
+  }): Promise<number>;
 
   findAll(params: PaginateParams): Promise<EventsPaginateProperties>;
 

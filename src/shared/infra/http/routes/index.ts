@@ -20,7 +20,7 @@ import { externalAuthorsRoutes } from "../../../../modules/externalAuthors/http/
 import { contributorRolesRoutes } from "../../../../modules/contributorRoles/http/routes/routes";
 import { publicationContributorsRoutes } from "../../../../modules/publicationContributors/http/routes/routes";
 import { articlesRoutes } from "../../../../modules/articles/http/routes/routes";
-import { technicalReportsRoutes } from "../../../../modules/technicalReports/http/routes/routes";
+import { thesisRoutes } from "../../../../modules/thesis/http/routes/routes";
 import { booksRoutes } from "../../../../modules/books/http/routes/routes";
 import { bookChaptersRoutes } from "../../../../modules/bookChapters/http/routes/routes";
 import { researchAreasRoutes } from "../../../../modules/researchAreas/http/routes/routes";
@@ -50,7 +50,7 @@ routes.use("/external-authors", externalAuthorsRoutes);
 routes.use("/contributor-role", contributorRolesRoutes);
 routes.use("/publication-contributors", publicationContributorsRoutes);
 routes.use("/articles", articlesRoutes);
-routes.use("/technical-reports", technicalReportsRoutes);
+routes.use("/thesis", thesisRoutes);
 routes.use("/books", booksRoutes);
 routes.use("/book-chapters", bookChaptersRoutes);
 routes.use("/research-areas", researchAreasRoutes);

@@ -17,7 +17,7 @@ export class NewsMedia {
   @Column({ type: "int" })
   news_id!: number;
 
-  @ManyToOne(() => News, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @ManyToOne(() => News, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "news_id" })
   news!: News;
 

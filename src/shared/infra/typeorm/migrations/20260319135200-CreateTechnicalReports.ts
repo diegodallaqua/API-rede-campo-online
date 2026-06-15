@@ -10,34 +10,21 @@ export class CreateTechnicalReports20260311050000 implements MigrationInterface 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "technical_reports",
+        name: "thesis",
         columns: [
-          {
-            name: "publication_id",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
-          {
-            name: "organization_id",
-            type: "int",
-            isNullable: false,
-          },
-          {
-            name: "number_of_pages",
-            type: "int",
-            isNullable: false,
-          },
+          { name: "publication_id", type: "int", isPrimary: true, isNullable: false },
+          { name: "organization_id", type: "int", isNullable: false },
+          { name: "number_of_pages", type: "int", isNullable: false },
         ],
       })
     );
 
     await queryRunner.createForeignKey(
-      "technical_reports",
+      "thesis",
       new TableForeignKey({
-        name: "FK_technical_reports_publication",
+        name: "FK_thesis_publication",
         columnNames: ["publication_id"],
-        referencedTableName: "publications",
+        referencedTableName: "publication",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -45,11 +32,11 @@ export class CreateTechnicalReports20260311050000 implements MigrationInterface 
     );
 
     await queryRunner.createForeignKey(
-      "technical_reports",
+      "thesis",
       new TableForeignKey({
-        name: "FK_technical_reports_organization",
+        name: "FK_thesis_organization",
         columnNames: ["organization_id"],
-        referencedTableName: "organizations",
+        referencedTableName: "organization",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -57,15 +44,15 @@ export class CreateTechnicalReports20260311050000 implements MigrationInterface 
     );
 
     await queryRunner.createIndex(
-      "technical_reports",
+      "thesis",
       new TableIndex({
-        name: "IDX_technical_reports_organization_id",
+        name: "IDX_thesis_organization_id",
         columnNames: ["organization_id"],
       })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("technical_reports");
+    await queryRunner.dropTable("thesis");
   }
 }

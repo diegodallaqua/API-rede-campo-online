@@ -6,36 +6,24 @@ import {
   TableIndex,
 } from "typeorm";
 
-export class CreatePublicationHasResearchAreas20260311080000
-  implements MigrationInterface
-{
+export class CreatePublicationHasResearchAreas20260311080000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "publication_has_research_areas",
+        name: "publicationhasresearcharea",
         columns: [
-          {
-            name: "publication_id",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
-          {
-            name: "research_area_id",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
+          { name: "publication_id", type: "int", isPrimary: true, isNullable: false },
+          { name: "research_area_id", type: "int", isPrimary: true, isNullable: false },
         ],
       })
     );
 
     await queryRunner.createForeignKey(
-      "publication_has_research_areas",
+      "publicationhasresearcharea",
       new TableForeignKey({
         name: "FK_publication_has_research_areas_publication",
         columnNames: ["publication_id"],
-        referencedTableName: "publications",
+        referencedTableName: "publication",
         referencedColumnNames: ["id"],
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
@@ -43,11 +31,11 @@ export class CreatePublicationHasResearchAreas20260311080000
     );
 
     await queryRunner.createForeignKey(
-      "publication_has_research_areas",
+      "publicationhasresearcharea",
       new TableForeignKey({
         name: "FK_publication_has_research_areas_research_area",
         columnNames: ["research_area_id"],
-        referencedTableName: "research_areas",
+        referencedTableName: "researcharea",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -55,7 +43,7 @@ export class CreatePublicationHasResearchAreas20260311080000
     );
 
     await queryRunner.createIndex(
-      "publication_has_research_areas",
+      "publicationhasresearcharea",
       new TableIndex({
         name: "IDX_publication_has_research_areas_unique",
         columnNames: ["publication_id", "research_area_id"],
@@ -65,6 +53,6 @@ export class CreatePublicationHasResearchAreas20260311080000
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("publication_has_research_areas");
+    await queryRunner.dropTable("publicationhasresearcharea");
   }
 }

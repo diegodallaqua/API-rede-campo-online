@@ -22,6 +22,8 @@ eventsRoutes.get(
       search: Joi.string().trim().min(1).max(180).optional(),
       page: Joi.number().integer().min(1).optional(),
       take: Joi.number().integer().min(1).max(100).optional(),
+      date_from: Joi.string().isoDate().optional(),
+      date_to: Joi.string().isoDate().optional(),
     }),
   }),
   listController.handle

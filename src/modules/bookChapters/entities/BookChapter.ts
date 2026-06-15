@@ -15,7 +15,7 @@ export class BookChapter {
   @PrimaryColumn({ type: "int" })
   publication_id!: number;
 
-  @OneToOne(() => Publication, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @OneToOne(() => Publication, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "publication_id" })
   publication!: Publication;
 

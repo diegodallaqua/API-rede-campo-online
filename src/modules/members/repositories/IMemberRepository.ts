@@ -16,7 +16,7 @@ export type MemberListItem = {
   linked_in_url: string | null;
   profile_picture: string | null;
 
-  memberRole: {
+  member_role: {
     id: number;
     name: string;
   };
@@ -53,7 +53,7 @@ export type MemberAuthPayload = {
   name: string;
   email: string;
   password: string;
-  memberRole: { id: number; name: string };
+  member_role: { id: number; name: string };
   organization: { id: number; name: string; logo: string; address_id: number };
 };
 

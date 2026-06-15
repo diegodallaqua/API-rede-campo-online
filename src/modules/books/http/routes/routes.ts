@@ -37,6 +37,8 @@ booksRoutes.post(
       publisher: Joi.string().trim().min(2).max(255).required(),
       edition: Joi.string().trim().min(1).max(100).required(),
       cover_photo: Joi.string().trim().max(255).optional().allow(null, ""),
+      isbn: Joi.string().trim().min(1).max(50).required(),
+      book_url: Joi.string().trim().max(255).optional().allow(null, ""),
     }),
   }),
   createController.handle
@@ -52,6 +54,8 @@ booksRoutes.put(
       publisher: Joi.string().trim().min(2).max(255).required(),
       edition: Joi.string().trim().min(1).max(100).required(),
       cover_photo: Joi.string().trim().max(255).optional().allow(null, ""),
+      isbn: Joi.string().trim().min(1).max(50).required(),
+      book_url: Joi.string().trim().max(255).optional().allow(null, ""),
     }),
   }),
   updateController.handle

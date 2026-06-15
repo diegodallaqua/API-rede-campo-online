@@ -37,17 +37,13 @@ export class NewsRepository implements INewsRepository {
       content: raw.n_content,
       publication_date: new Date(raw.n_publication_date),
 
-      project: raw.p_id
-        ? {
-            id: Number(raw.p_id),
-            name: raw.p_name,
-          }
-        : null,
-
       member: {
         id: Number(raw.m_id),
         name: raw.m_name,
         email: raw.m_email,
+        member_role: { id: Number(raw.mr_id), name: raw.mr_name },
+        organization: { id: Number(raw.o_id), name: raw.o_name },
+        profile_picture: raw.m_profile_picture ?? null,
       },
     };
   }
@@ -60,12 +56,16 @@ export class NewsRepository implements INewsRepository {
       "n.content as n_content",
       "n.publication_date as n_publication_date",
 
-      "p.id as p_id",
-      "p.name as p_name",
-
       "m.id as m_id",
       "m.name as m_name",
       "m.email as m_email",
+      "m.profile_picture as m_profile_picture",
+
+      "mr.id as mr_id",
+      "mr.name as mr_name",
+
+      "o.id as o_id",
+      "o.name as o_name",
     ]);
   }
 
@@ -74,36 +74,33 @@ export class NewsRepository implements INewsRepository {
     page,
     skip,
     take,
-    project_id,
   }: PaginateParams): Promise<NewsPaginateProperties> {
     const qb = this.ormRepo
       .createQueryBuilder("n")
-      .leftJoin("n.project", "p")
-      .innerJoin("n.member", "m");
+      .innerJoin("n.member", "m")
+      .innerJoin("m.memberRole", "mr")
+      .innerJoin("m.organization", "o");
 
     this.baseSelect(qb);
 
     qb.orderBy("n.publication_date", "DESC")
-      .addOrderBy("n.title", "ASC")
-      .limit(take)
-      .offset(skip);
-
-    if (project_id) {
-      qb.andWhere("n.project_id = :project_id", { project_id });
-    }
+      .addOrderBy("n.title", "ASC");
 
     const trimmed = search?.trim();
 
     if (trimmed) {
       qb.andWhere(
-        `(n.title LIKE :s OR n.description LIKE :s OR n.content LIKE :s OR m.name LIKE :s OR p.name LIKE :s)`,
+        `(n.title LIKE :s OR n.description LIKE :s OR n.content LIKE :s OR m.name LIKE :s)`,
         { s: `%${trimmed}%` }
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -117,8 +114,9 @@ export class NewsRepository implements INewsRepository {
   async findByIdWithRelations(id: number): Promise<NewsListItem | null> {
     const qb = this.ormRepo
       .createQueryBuilder("n")
-      .leftJoin("n.project", "p")
       .innerJoin("n.member", "m")
+      .innerJoin("m.memberRole", "mr")
+      .innerJoin("m.organization", "o")
       .where("n.id = :id", { id });
 
     this.baseSelect(qb);

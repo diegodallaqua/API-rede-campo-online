@@ -1,8 +1,10 @@
 import { inject, injectable } from "tsyringe";
 import {
   IBookChapterRepository,
-  BookChapterPaginateProperties,
+  BookChapterEnrichedPaginateProperties,
 } from "../repositories/IBookChapterRepository";
+import { IPublicationHasResearchAreasRepository } from "../../publicationHasResearchAreas/repositories/IPublicationHasResearchAreaRepository";
+import { IPublicationContributorRepository } from "../../publicationContributors/repositories/IPublicationContributorRepository";
 
 type IRequest = {
   title?: string;
@@ -14,24 +16,60 @@ type IRequest = {
 export class ListBookChaptersUseCase {
   constructor(
     @inject("BookChapterRepository")
-    private bookChapterRepository: IBookChapterRepository
+    private bookChapterRepository: IBookChapterRepository,
+
+    @inject("PublicationHasResearchAreasRepository")
+    private publicationHasResearchAreasRepository: IPublicationHasResearchAreasRepository,
+
+    @inject("PublicationContributorRepository")
+    private publicationContributorRepository: IPublicationContributorRepository
   ) {}
 
   async execute({
     title,
     page,
     take,
-  }: IRequest): Promise<BookChapterPaginateProperties> {
+  }: IRequest): Promise<BookChapterEnrichedPaginateProperties> {
     const safePage = Number.isFinite(page) && page > 0 ? page : 1;
     const safeTake = Number.isFinite(take) && take > 0 && take <= 100 ? take : 10;
 
     const skip = (safePage - 1) * safeTake;
 
-    return this.bookChapterRepository.findAll({
+    const bookChapters = await this.bookChapterRepository.findAll({
       title,
       page: safePage,
       skip,
       take: safeTake,
     });
+
+    const enrichedData = await Promise.all(
+      bookChapters.data.map(async (chapter) => {
+        const [research_areas, contributors] = await Promise.all([
+          this.publicationHasResearchAreasRepository.findResearchAreasByPublicationId(
+            chapter.publication.id
+          ),
+          this.publicationContributorRepository.findByPublicationId(
+            chapter.publication.id
+          ),
+        ]);
+
+        return {
+          book_name: chapter.book_name,
+          chapter_number: chapter.chapter_number,
+          publication: {
+            ...chapter.publication,
+            research_areas,
+            contributors,
+          },
+        };
+      })
+    );
+
+    return {
+      per_page: bookChapters.per_page,
+      total: bookChapters.total,
+      current_page: bookChapters.current_page,
+      data: enrichedData,
+    };
   }
 }

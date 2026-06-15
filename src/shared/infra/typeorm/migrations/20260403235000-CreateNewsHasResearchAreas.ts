@@ -6,36 +6,24 @@ import {
   TableIndex,
 } from "typeorm";
 
-export class CreateNewsHasResearchAreas20260311090000
-  implements MigrationInterface
-{
+export class CreateNewsHasResearchAreas20260311090000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "news_has_research_areas",
+        name: "newshasresearcharea",
         columns: [
-          {
-            name: "research_area_id",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
-          {
-            name: "news_id",
-            type: "int",
-            isPrimary: true,
-            isNullable: false,
-          },
+          { name: "research_area_id", type: "int", isPrimary: true, isNullable: false },
+          { name: "news_id", type: "int", isPrimary: true, isNullable: false },
         ],
       })
     );
 
     await queryRunner.createForeignKey(
-      "news_has_research_areas",
+      "newshasresearcharea",
       new TableForeignKey({
         name: "FK_news_has_research_areas_research_area",
         columnNames: ["research_area_id"],
-        referencedTableName: "research_areas",
+        referencedTableName: "researcharea",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -43,7 +31,7 @@ export class CreateNewsHasResearchAreas20260311090000
     );
 
     await queryRunner.createForeignKey(
-      "news_has_research_areas",
+      "newshasresearcharea",
       new TableForeignKey({
         name: "FK_news_has_research_areas_news",
         columnNames: ["news_id"],
@@ -55,7 +43,7 @@ export class CreateNewsHasResearchAreas20260311090000
     );
 
     await queryRunner.createIndex(
-      "news_has_research_areas",
+      "newshasresearcharea",
       new TableIndex({
         name: "IDX_news_has_research_areas_unique",
         columnNames: ["research_area_id", "news_id"],
@@ -65,6 +53,6 @@ export class CreateNewsHasResearchAreas20260311090000
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("news_has_research_areas");
+    await queryRunner.dropTable("newshasresearcharea");
   }
 }

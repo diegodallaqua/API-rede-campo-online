@@ -20,7 +20,7 @@ export const AppDataSource = new DataSource({
 
   // se você usa migrations, deixe isso apontado
   migrations: [
-    path.resolve(__dirname, "migrations", "*.{ts,js}")
+    path.resolve(__dirname, "..", "typeorm", "migrations", "*.{ts,js}")
   ],
 
   // migrations > synchronize (evita surpresas)

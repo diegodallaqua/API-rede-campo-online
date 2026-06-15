@@ -6,7 +6,6 @@ type IRequest = {
   search?: string;
   page: number;
   take: number;
-  project_id?: number;
 };
 
 @injectable()
@@ -23,7 +22,6 @@ export class ListNewsUseCase {
     search,
     page,
     take,
-    project_id,
   }: IRequest): Promise<NewsPaginateProperties> {
     const safePage = Number.isFinite(page) && page > 0 ? page : 1;
     const safeTake = Number.isFinite(take) && take > 0 && take <= 100 ? take : 10;
@@ -35,7 +33,6 @@ export class ListNewsUseCase {
       page: safePage,
       skip,
       take: safeTake,
-      project_id,
     });
 
     const enrichedData: NewsListItem[] = await Promise.all(

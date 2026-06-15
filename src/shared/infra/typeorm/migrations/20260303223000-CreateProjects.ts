@@ -10,7 +10,7 @@ export class CreateProjects20260303100000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "projects",
+        name: "project",
         columns: [
           { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
 
@@ -23,17 +23,16 @@ export class CreateProjects20260303100000 implements MigrationInterface {
 
           { name: "begin_date", type: "date", isNullable: false },
           { name: "end_date", type: "date", isNullable: true },
-
         ],
       })
     );
 
     await queryRunner.createForeignKey(
-      "projects",
+      "project",
       new TableForeignKey({
         name: "FK_projects_project_type",
         columnNames: ["project_type_id"],
-        referencedTableName: "project_types",
+        referencedTableName: "projecttype",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -41,7 +40,7 @@ export class CreateProjects20260303100000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "projects",
+      "project",
       new TableIndex({
         name: "IDX_projects_project_type_id",
         columnNames: ["project_type_id"],
@@ -49,7 +48,7 @@ export class CreateProjects20260303100000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "projects",
+      "project",
       new TableIndex({
         name: "IDX_projects_name",
         columnNames: ["name"],
@@ -58,6 +57,6 @@ export class CreateProjects20260303100000 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("projects");
+    await queryRunner.dropTable("project");
   }
 }

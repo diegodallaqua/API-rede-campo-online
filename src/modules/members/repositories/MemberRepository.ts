@@ -48,7 +48,7 @@ export class MemberRepository implements IMemberRepository {
       linked_in_url: raw.m_linked_in_url ?? null,
       profile_picture: raw.m_profile_picture ?? null,
 
-      memberRole: {
+      member_role: {
         id: Number(raw.r_id),
         name: raw.r_name,
       },
@@ -91,9 +91,7 @@ export class MemberRepository implements IMemberRepository {
         "o.logo as o_logo",
         "o.address_id as o_address_id",
       ])  
-      .orderBy("m.name", "ASC")
-      .skip(skip)
-      .take(take);
+      .orderBy("m.name", "ASC");
 
     if (member_role_id) qb.andWhere("m.member_role_id = :rid", { rid: member_role_id });
     if (organization_id) qb.andWhere("m.organization_id = :oid", { oid: organization_id });
@@ -107,9 +105,12 @@ export class MemberRepository implements IMemberRepository {
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -185,7 +186,7 @@ export class MemberRepository implements IMemberRepository {
       name: raw.m_name,
       email: raw.m_email,
       password: raw.m_password,
-      memberRole: { id: Number(raw.r_id), name: raw.r_name },
+      member_role: { id: Number(raw.r_id), name: raw.r_name },
       organization: {
         id: Number(raw.o_id),
         name: raw.o_name,

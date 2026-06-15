@@ -10,7 +10,7 @@ export class CreateProjectMedia20260304100000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "project_media",
+        name: "projectmedia",
         columns: [
           {
             name: "id",
@@ -27,11 +27,11 @@ export class CreateProjectMedia20260304100000 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      "project_media",
+      "projectmedia",
       new TableForeignKey({
         name: "FK_project_media_project",
         columnNames: ["project_id"],
-        referencedTableName: "projects",
+        referencedTableName: "project",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -39,7 +39,7 @@ export class CreateProjectMedia20260304100000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "project_media",
+      "projectmedia",
       new TableIndex({
         name: "IDX_project_media_project_id",
         columnNames: ["project_id"],
@@ -47,7 +47,7 @@ export class CreateProjectMedia20260304100000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "project_media",
+      "projectmedia",
       new TableIndex({
         name: "IDX_project_media_name",
         columnNames: ["name"],
@@ -56,6 +56,6 @@ export class CreateProjectMedia20260304100000 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("project_media");
+    await queryRunner.dropTable("projectmedia");
   }
 }

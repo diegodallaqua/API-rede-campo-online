@@ -38,13 +38,6 @@ export class NewsMediaRepository implements INewsMediaRepository {
         description: raw.n_description,
         content: raw.n_content,
         publication_date: raw.n_publication_date,
-        project: raw.p_id
-          ? {
-              id: Number(raw.p_id),
-              name: raw.p_name,
-              status: Boolean(raw.p_status),
-            }
-          : null,
       },
     };
   }
@@ -60,10 +53,6 @@ export class NewsMediaRepository implements INewsMediaRepository {
       "n.description as n_description",
       "n.content as n_content",
       "n.publication_date as n_publication_date",
-
-      "p.id as p_id",
-      "p.name as p_name",
-      "p.status as p_status",
     ]);
   }
 
@@ -76,12 +65,11 @@ export class NewsMediaRepository implements INewsMediaRepository {
   }: PaginateParams): Promise<NewsMediaPaginateProperties> {
     const qb = this.ormRepo
       .createQueryBuilder("nm")
-      .innerJoin("nm.news", "n")
-      .leftJoin("n.project", "p");
+      .innerJoin("nm.news", "n");
 
     this.baseSelect(qb);
 
-    qb.orderBy("nm.name", "ASC").skip(skip).take(take);
+    qb.orderBy("nm.name", "ASC");
 
     if (news_id) {
       qb.andWhere("nm.news_id = :news_id", { news_id });
@@ -90,14 +78,17 @@ export class NewsMediaRepository implements INewsMediaRepository {
     const trimmed = search?.trim();
     if (trimmed) {
       qb.andWhere(
-        `(nm.name LIKE :s OR nm.media LIKE :s OR n.title LIKE :s OR n.description LIKE :s OR p.name LIKE :s)`,
+        `(nm.name LIKE :s OR nm.media LIKE :s OR n.title LIKE :s OR n.description LIKE :s)`,
         { s: `%${trimmed}%` }
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -112,7 +103,6 @@ export class NewsMediaRepository implements INewsMediaRepository {
     const qb = this.ormRepo
       .createQueryBuilder("nm")
       .innerJoin("nm.news", "n")
-      .leftJoin("n.project", "p")
       .where("nm.id = :id", { id });
 
     this.baseSelect(qb);

@@ -74,7 +74,7 @@ export class ProjectHasMembersRepository
       lattes_url: row.m_lattes_url ?? null,
       linked_in_url: row.m_linked_in_url ?? null,
       profile_picture: row.m_profile_picture ?? null,
-      memberRole: {
+      member_role: {
         id: Number(row.mr_id),
         name: row.mr_name,
       },

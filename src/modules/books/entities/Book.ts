@@ -15,7 +15,7 @@ export class Book {
   @PrimaryColumn({ type: "int" })
   publication_id!: number;
 
-  @OneToOne(() => Publication, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @OneToOne(() => Publication, { onDelete: "CASCADE", onUpdate: "CASCADE" })
   @JoinColumn({ name: "publication_id" })
   publication!: Publication;
 
@@ -27,4 +27,10 @@ export class Book {
 
   @Column({ type: "varchar", length: 255, nullable: true })
   cover_photo?: string | null;
+
+  @Column({ type: "varchar", length: 50 })
+  isbn!: string;
+
+  @Column({ type: "varchar", length: 255, nullable: true })
+  book_url?: string | null;
 }

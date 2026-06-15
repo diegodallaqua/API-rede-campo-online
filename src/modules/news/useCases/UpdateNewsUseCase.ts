@@ -1,14 +1,12 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
 import { INewsRepository } from "../repositories/INewsRepository";
-import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 import { IMemberRepository } from "../../members/repositories/IMemberRepository";
 import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
 import { INewsHasResearchAreasRepository } from "../../newsHasResearchAreas/repositories/INewsHasResearchAreaRepository";
 
 type IRequest = {
   id: number;
-  project_id?: number | null;
   member_id: number;
   title: string;
   description: string;
@@ -23,9 +21,6 @@ export class UpdateNewsUseCase {
     @inject("NewsRepository")
     private newsRepository: INewsRepository,
 
-    @inject("ProjectRepository")
-    private projectRepository: IProjectRepository,
-
     @inject("MemberRepository")
     private memberRepository: IMemberRepository,
 
@@ -38,7 +33,6 @@ export class UpdateNewsUseCase {
 
   async execute({
     id,
-    project_id,
     member_id,
     title,
     description,
@@ -54,13 +48,6 @@ export class UpdateNewsUseCase {
     const memberExists = await this.memberRepository.existsById(member_id);
     if (!memberExists) {
       throw new AppError("Member not found", 404, "MEMBER_NOT_FOUND");
-    }
-
-    if (project_id) {
-      const projectExists = await this.projectRepository.existsById(project_id);
-      if (!projectExists) {
-        throw new AppError("Project not found", 404, "PROJECT_NOT_FOUND");
-      }
     }
 
     const publicationDate = new Date(publication_date);
@@ -83,7 +70,6 @@ export class UpdateNewsUseCase {
 
     await this.newsRepository.update({
       id,
-      project_id: project_id ?? null,
       member_id,
       title: title.trim(),
       description: description.trim(),

@@ -18,6 +18,7 @@ export type PublicationContributorListItem = {
     id: number;
     name: string;
     email: string;
+    profile_picture?: string | null;
   } | null;
 
   externalAuthor: {
@@ -59,10 +60,29 @@ export type PublicationContributorPaginateProperties = {
   data: PublicationContributorListItem[];
 };
 
+export type PublicationContributorEmbedItem = {
+  author_order: number;
+  contributor_role: { id: number; name: string };
+  member: {
+    id: number;
+    name: string;
+    email: string;
+    description: string;
+    lattes_url: string | null;
+    linked_in_url: string | null;
+    profile_picture: string | null;
+    member_role: { id: number; name: string };
+    organization: { id: number; name: string; logo: string; address_id: number };
+  } | null;
+  external_author: { id: number; name: string; email: string | null; orcid: string | null } | null;
+};
+
 export interface IPublicationContributorRepository {
   create(data: ICreatePublicationContributorDTO): Promise<void>;
 
   findAll(params: PaginateParams): Promise<PublicationContributorPaginateProperties>;
+
+  findByPublicationId(publication_id: number): Promise<PublicationContributorEmbedItem[]>;
 
   findByIdWithRelations(
     publication_id: number,

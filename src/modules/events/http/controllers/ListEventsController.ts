@@ -21,8 +21,18 @@ export class ListEventsController {
 
     const project_id = toNumber(req.query.project_id);
 
+    const date_from =
+      typeof req.query.date_from === "string" && req.query.date_from.trim() !== ""
+        ? req.query.date_from.trim()
+        : undefined;
+
+    const date_to =
+      typeof req.query.date_to === "string" && req.query.date_to.trim() !== ""
+        ? req.query.date_to.trim()
+        : undefined;
+
     const useCase = container.resolve(ListEventsUseCase);
-    const result = await useCase.execute({ search, page, take, project_id });
+    const result = await useCase.execute({ search, page, take, project_id, date_from, date_to });
 
     return res.json(result);
   }

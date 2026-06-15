@@ -64,9 +64,7 @@ export class ProjectRepository implements IProjectRepository {
         "t.id as t_id",
         "t.name as t_name",
       ])
-      .orderBy("p.name", "ASC")
-      .limit(take)
-      .offset(skip);
+      .orderBy("p.name", "ASC");
 
     const pname = project_name?.trim();
     if (pname) {
@@ -77,9 +75,12 @@ export class ProjectRepository implements IProjectRepository {
       qb.andWhere("p.status = :st", { st: status });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

@@ -4,7 +4,7 @@ export class CreateCities20260209184530 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "cities",
+        name: "city",
         columns: [
           { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
           { name: "state_id", type: "int", isNullable: false },
@@ -14,10 +14,10 @@ export class CreateCities20260209184530 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      "cities",
+      "city",
       new TableForeignKey({
         columnNames: ["state_id"],
-        referencedTableName: "states",
+        referencedTableName: "state",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -25,7 +25,7 @@ export class CreateCities20260209184530 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "cities",
+      "city",
       new TableIndex({
         name: "IDX_CITIES_STATE_NAME_UNIQUE",
         columnNames: ["state_id", "name"],
@@ -35,6 +35,6 @@ export class CreateCities20260209184530 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("cities");
+    await queryRunner.dropTable("city");
   }
 }

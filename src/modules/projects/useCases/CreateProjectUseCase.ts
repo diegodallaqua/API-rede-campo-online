@@ -1,6 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { IProjectRepository } from "../repositories/IProjectRepository";
+import {
+  IProjectRepository,
+  ProjectListItem,
+} from "../repositories/IProjectRepository";
 import { IProjectTypeRepository } from "../../projectTypes/repositories/IProjectTypeRepository";
 import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
 import { IProjectHasResearchAreasRepository } from "../../projectHasResearchAreas/repositories/IProjectHasResearchAreaRepository";
@@ -49,7 +52,7 @@ export class CreateProjectUseCase {
     end_date,
     research_area_ids = [],
     member_ids = [],
-  }: IRequest): Promise<void> {
+  }: IRequest): Promise<ProjectListItem> {
     const type = await this.projectTypeRepository.findById(project_type_id);
     if (!type) {
       throw new AppError("Project type not found", 404, "PROJECT_TYPE_NOT_FOUND");
@@ -109,5 +112,26 @@ export class CreateProjectUseCase {
         member_id,
       }))
     );
+
+    const project = await this.projectRepository.findByIdWithRelations(
+      createdProject.id
+    );
+    if (!project) {
+      throw new AppError("Project not found", 404, "PROJECT_NOT_FOUND");
+    }
+
+    const researchAreas =
+      await this.projectHasResearchAreasRepository.findResearchAreasByProjectId(
+        project.id
+      );
+
+    const members =
+      await this.projectHasMembersRepository.findMembersByProjectId(project.id);
+
+    return {
+      ...project,
+      research_areas: researchAreas,
+      members,
+    };
   }
 }

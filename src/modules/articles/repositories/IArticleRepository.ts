@@ -14,6 +14,42 @@ export type ArticleListItem = {
   };
 };
 
+export type ArticleResearchAreaItem = {
+  id: number;
+  name: string;
+};
+
+export type ArticleContributorItem = {
+  author_order: number;
+  contributor_role: { id: number; name: string };
+  member: { id: number; name: string; email: string } | null;
+  external_author: { id: number; name: string; email: string | null; orcid: string | null } | null;
+};
+
+export type ArticleListItemEnriched = {
+  journal_name: string;
+  volume: string | null;
+  issue: string | null;
+  pages: string | null;
+  publisher: string | null;
+  publication: {
+    id: number;
+    title: string;
+    abstract: string;
+    publication_date: string;
+    doi: string | null;
+    research_areas: ArticleResearchAreaItem[];
+    contributors: ArticleContributorItem[];
+  };
+};
+
+export type ArticleEnrichedPaginateProperties = {
+  per_page: number;
+  total: number;
+  current_page: number;
+  data: ArticleListItemEnriched[];
+};
+
 export interface ICreateArticleDTO {
   publication_id: number;
   journal_name: string;

@@ -17,13 +17,15 @@ export class ProjectMediaRepository implements IProjectMediaRepository {
     this.ormRepo = AppDataSource.getRepository(ProjectMedia);
   }
 
-  async create(data: ICreateProjectMediaDTO): Promise<void> {
+  async create(data: ICreateProjectMediaDTO): Promise<ProjectMediaListItem> {
     const item = this.ormRepo.create({
       project_id: data.project_id,
       name: data.name,
       media: data.media,
     });
-    await this.ormRepo.save(item);
+    const saved = await this.ormRepo.save(item);
+
+    return (await this.findByIdWithRelations(saved.id))!;
   }
 
   async existsById(id: number): Promise<boolean> {
@@ -82,9 +84,7 @@ export class ProjectMediaRepository implements IProjectMediaRepository {
         "pt.id as pt_id",
         "pt.name as pt_name",
       ])
-      .orderBy("pm.name", "ASC")
-      .skip(skip)
-      .take(take);
+      .orderBy("pm.name", "ASC");
 
     if (project_id) {
       qb.andWhere("pm.project_id = :pid", { pid: project_id });
@@ -99,9 +99,12 @@ export class ProjectMediaRepository implements IProjectMediaRepository {
       );
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -138,7 +141,7 @@ export class ProjectMediaRepository implements IProjectMediaRepository {
     return raw ? this.mapRawToItem(raw) : null;
   }
 
-  async update(data: IUpdateProjectMediaDTO): Promise<void> {
+  async update(data: IUpdateProjectMediaDTO): Promise<ProjectMediaListItem> {
     await this.ormRepo.update(
       { id: data.id },
       {
@@ -147,6 +150,8 @@ export class ProjectMediaRepository implements IProjectMediaRepository {
         media: data.media,
       }
     );
+
+    return (await this.findByIdWithRelations(data.id))!;
   }
 
   async delete(id: number): Promise<void> {

@@ -11,7 +11,7 @@ export type ProjectMemberItem = {
   lattes_url: string | null;
   linked_in_url: string | null;
   profile_picture: string | null;
-  memberRole: {
+  member_role: {
     id: number;
     name: string;
   };

@@ -32,6 +32,8 @@ export class BookRepository implements IBookRepository {
       publisher: raw.b_publisher,
       edition: raw.b_edition,
       cover_photo: raw.b_cover_photo ?? null,
+      isbn: raw.b_isbn,
+      book_url: raw.b_book_url ?? null,
       publication: {
         id: Number(raw.p_id),
         title: raw.p_title,
@@ -50,6 +52,8 @@ export class BookRepository implements IBookRepository {
         "b.publisher as b_publisher",
         "b.edition as b_edition",
         "b.cover_photo as b_cover_photo",
+        "b.isbn as b_isbn",
+        "b.book_url as b_book_url",
 
         "p.id as p_id",
         "p.title as p_title",
@@ -67,9 +71,7 @@ export class BookRepository implements IBookRepository {
   }: PaginateParams): Promise<BookPaginateProperties> {
     const qb = this.baseQuery()
       .orderBy("p.id", "ASC")
-      .addOrderBy("p.publication_date", "ASC")
-      .skip(skip)
-      .take(take);
+      .addOrderBy("p.publication_date", "ASC");
 
     const trimmed = title?.trim();
     if (trimmed) {
@@ -78,9 +80,12 @@ export class BookRepository implements IBookRepository {
       });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {
@@ -108,6 +113,8 @@ export class BookRepository implements IBookRepository {
         publisher: data.publisher,
         edition: data.edition,
         cover_photo: data.cover_photo ?? null,
+        isbn: data.isbn,
+        book_url: data.book_url ?? null,
       }
     );
   }

@@ -11,15 +11,12 @@ export class ListNewsController {
 
     const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
-    const project_id = req.query.project_id !== undefined ? Number(req.query.project_id) : undefined;
-
     const useCase = container.resolve(ListNewsUseCase);
 
     const result = await useCase.execute({
       search,
       page,
       take,
-      project_id,
     });
 
     return res.json(result);

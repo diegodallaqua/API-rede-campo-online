@@ -11,6 +11,39 @@ export type BookChapterListItem = {
   };
 };
 
+export type BookChapterResearchAreaItem = {
+  id: number;
+  name: string;
+};
+
+export type BookChapterContributorItem = {
+  author_order: number;
+  contributor_role: { id: number; name: string };
+  member: { id: number; name: string; email: string } | null;
+  external_author: { id: number; name: string; email: string | null; orcid: string | null } | null;
+};
+
+export type BookChapterListItemEnriched = {
+  book_name: string;
+  chapter_number: number;
+  publication: {
+    id: number;
+    title: string;
+    abstract: string;
+    publication_date: string;
+    doi: string | null;
+    research_areas: BookChapterResearchAreaItem[];
+    contributors: BookChapterContributorItem[];
+  };
+};
+
+export type BookChapterEnrichedPaginateProperties = {
+  per_page: number;
+  total: number;
+  current_page: number;
+  data: BookChapterListItemEnriched[];
+};
+
 export interface ICreateBookChapterDTO {
   publication_id: number;
   book_name: string;

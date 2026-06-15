@@ -29,6 +29,8 @@ export class UpdateBookUseCase {
       publisher: data.publisher.trim(),
       edition: data.edition.trim(),
       cover_photo: data.cover_photo?.trim() || null,
+      isbn: data.isbn.trim(),
+      book_url: data.book_url?.trim() || null,
     });
   }
 }

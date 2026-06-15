@@ -77,9 +77,7 @@ export class OrganizationRepository implements IOrganizationRepository {
     address_id,
   }: PaginateParams): Promise<OrganizationsPaginateProperties> {
     const qb = this.baseQuery()
-      .orderBy("o.name", "ASC")
-      .skip(skip)
-      .take(take);
+      .orderBy("o.name", "ASC");
 
     if (address_id) {
       qb.andWhere("o.address_id = :address_id", { address_id });
@@ -89,9 +87,12 @@ export class OrganizationRepository implements IOrganizationRepository {
       qb.andWhere("o.name LIKE :search", { search: `%${search.trim()}%` });
     }
 
+    const countQb = qb.clone();
+    qb.limit(take).offset(skip);
+
     const [raw, total] = await Promise.all([
       qb.getRawMany(),
-      qb.clone().skip(undefined as any).take(undefined as any).getCount(),
+      countQb.getCount(),
     ]);
 
     return {

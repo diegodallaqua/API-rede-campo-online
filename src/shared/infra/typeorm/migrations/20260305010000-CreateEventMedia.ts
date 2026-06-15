@@ -10,7 +10,7 @@ export class CreateEventMedia20260304133000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "event_media",
+        name: "eventmedia",
         columns: [
           {
             name: "id",
@@ -27,11 +27,11 @@ export class CreateEventMedia20260304133000 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      "event_media",
+      "eventmedia",
       new TableForeignKey({
         name: "FK_event_media_event",
         columnNames: ["event_id"],
-        referencedTableName: "events",
+        referencedTableName: "event",
         referencedColumnNames: ["id"],
         onDelete: "RESTRICT",
         onUpdate: "CASCADE",
@@ -39,7 +39,7 @@ export class CreateEventMedia20260304133000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "event_media",
+      "eventmedia",
       new TableIndex({
         name: "IDX_event_media_event_id",
         columnNames: ["event_id"],
@@ -47,7 +47,7 @@ export class CreateEventMedia20260304133000 implements MigrationInterface {
     );
 
     await queryRunner.createIndex(
-      "event_media",
+      "eventmedia",
       new TableIndex({
         name: "IDX_event_media_name",
         columnNames: ["name"],
@@ -56,6 +56,6 @@ export class CreateEventMedia20260304133000 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("event_media");
+    await queryRunner.dropTable("eventmedia");
   }
 }

@@ -1,4 +1,5 @@
 import "./providers";
+import "../../modules/sessions/container";
 import "../../modules/states/container";
 import "../../modules/cities/container";
 import "../../modules/addresses/container";
@@ -17,7 +18,7 @@ import "../../modules/externalAuthors/container";
 import "../../modules/contributorRoles/container";
 import "../../modules/publicationContributors/container";
 import "../../modules/articles/container";
-import "../../modules/technicalReports/container";
+import "../../modules/thesis/container";
 import "../../modules/books/container";
 import "../../modules/bookChapters/container";
 import "../../modules/researchAreas/container";
