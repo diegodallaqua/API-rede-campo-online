@@ -23,7 +23,7 @@ export class ListResearchAreasUseCase {
     take,
   }: IRequest): Promise<ResearchAreaPaginateProperties> {
     const safePage = Number.isFinite(page) && page > 0 ? page : 1;
-    const safeTake = Number.isFinite(take) && take > 0 && take <= 100 ? take : 10;
+    const safeTake = Number.isFinite(take) && take > 0 && take <= 400 ? take : 400;
 
     const skip = (safePage - 1) * safeTake;
 

@@ -9,7 +9,7 @@ export class ListResearchAreasController {
 
     const page = req.query.page !== undefined ? Number(req.query.page) : 1;
 
-    const take = req.query.take !== undefined ? Number(req.query.take) : 10;
+    const take = req.query.take !== undefined ? Number(req.query.take) : 400;
 
     const useCase = container.resolve(ListResearchAreasUseCase);
 

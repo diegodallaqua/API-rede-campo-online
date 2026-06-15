@@ -16,7 +16,6 @@ const RESEARCH_AREAS: string[] = [
   "Agricultura Regenerativa",
   "Agricultura Orgânica",
   "Fitopatologia",
-  "Entomologia Agrícola",
   "Plantas Daninhas",
   "Conservação do Solo",
   "Agrometeorologia",
