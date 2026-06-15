@@ -16,6 +16,8 @@ export class CreateBooks20260311060000 implements MigrationInterface {
           { name: "publisher", type: "varchar", length: "255", isNullable: false },
           { name: "edition", type: "varchar", length: "100", isNullable: false },
           { name: "cover_photo", type: "varchar", length: "255", isNullable: true },
+          { name: "isbn", type: "varchar", length: "50", isNullable: false },
+          { name: "book_url", type: "varchar", length: "255", isNullable: true },
         ],
       })
     );
@@ -27,7 +29,7 @@ export class CreateBooks20260311060000 implements MigrationInterface {
         columnNames: ["publication_id"],
         referencedTableName: "publication",
         referencedColumnNames: ["id"],
-        onDelete: "RESTRICT",
+        onDelete: "CASCADE",
         onUpdate: "CASCADE",
       })
     );

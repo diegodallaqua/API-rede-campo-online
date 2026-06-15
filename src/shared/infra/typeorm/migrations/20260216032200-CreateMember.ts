@@ -19,7 +19,7 @@ export class CreateMembers20260216032200 implements MigrationInterface {
 
           { name: "name", type: "varchar", length: "160", isNullable: false },
           { name: "email", type: "varchar", length: "180", isNullable: false },
-          { name: "description", type: "varchar", length: "600", isNullable: false },
+          { name: "description", type: "varchar", length: "2000", isNullable: false },
 
           { name: "lattes_url", type: "varchar", length: "255", isNullable: true },
           { name: "linked_in_url", type: "varchar", length: "255", isNullable: true },

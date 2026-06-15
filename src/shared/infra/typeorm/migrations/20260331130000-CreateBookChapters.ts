@@ -26,7 +26,7 @@ export class CreateBookChapters20260311070000 implements MigrationInterface {
         columnNames: ["publication_id"],
         referencedTableName: "publication",
         referencedColumnNames: ["id"],
-        onDelete: "RESTRICT",
+        onDelete: "CASCADE",
         onUpdate: "CASCADE",
       })
     );

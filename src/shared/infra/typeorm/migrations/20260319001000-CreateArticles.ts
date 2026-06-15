@@ -29,7 +29,7 @@ export class CreateArticles20260311040000 implements MigrationInterface {
         columnNames: ["publication_id"],
         referencedTableName: "publication",
         referencedColumnNames: ["id"],
-        onDelete: "RESTRICT",
+        onDelete: "CASCADE",
         onUpdate: "CASCADE",
       })
     );
