@@ -6,7 +6,7 @@ import {
   TableIndex,
 } from "typeorm";
 
-export class CreateNewsHasResearchAreas20260311090000 implements MigrationInterface {
+export class CreateNewsHasResearchAreas20260403235000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
