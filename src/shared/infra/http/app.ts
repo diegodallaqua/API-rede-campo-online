@@ -12,6 +12,8 @@ import { errorHandler } from "./middlewares/errorHandler";
 import { routes } from "./routes";
 
 export const app = express();
+app.set('trust proxy', 1);
+app.disable("x-powered-by");
 
 app.disable("x-powered-by");
 app.use(helmet());
