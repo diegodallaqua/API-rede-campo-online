@@ -1,8 +1,8 @@
 import { container } from "tsyringe";
-import { IProjectsRepository } from "../repositories/IProjectRepository";
+import { IProjectRepository } from "../repositories/IProjectRepository";
 import { ProjectRepository } from "../repositories/ProjectRepository";
 
-container.registerSingleton<IProjectsRepository>(
+container.registerSingleton<IProjectRepository>(
   "ProjectRepository",
   ProjectRepository
 );
