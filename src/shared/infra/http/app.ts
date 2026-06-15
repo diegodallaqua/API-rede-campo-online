@@ -25,6 +25,8 @@ app.use(
   })
 );
 
+app.options('*', cors());
+
 const windowMs = Number(process.env.RATE_LIMIT_WINDOW_MS ?? 60000);
 const max = Number(process.env.RATE_LIMIT_MAX ?? 120);
 
