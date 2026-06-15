@@ -221,13 +221,20 @@ interface IbgeEstado {
 interface IbgeMunicipio {
   id: number;
   nome: string;
-  microrregiao: {
+  microrregiao?: {
     mesorregiao: {
       UF: {
         sigla: string;
       };
     };
-  };
+  } | null;
+  "regiao-imediata"?: {
+    "regiao-intermediaria": {
+      UF: {
+        sigla: string;
+      };
+    };
+  } | null;
 }
 
 export class SeedInitialData20260615000000 implements MigrationInterface {
@@ -253,10 +260,12 @@ export class SeedInitialData20260615000000 implements MigrationInterface {
     );
     const municipios: IbgeMunicipio[] = await municipiosRes.json();
 
-    const cityRows: [number, string][] = municipios.map((m) => [
-      stateIdByUf[m.microrregiao.mesorregiao.UF.sigla],
-      m.nome,
-    ]);
+    const cityRows: [number, string][] = municipios.map((m) => {
+      const sigla =
+        m.microrregiao?.mesorregiao.UF.sigla ??
+        m["regiao-imediata"]?.["regiao-intermediaria"].UF.sigla;
+      return [stateIdByUf[sigla as string], m.nome];
+    });
 
     const chunkSize = 500;
     for (let i = 0; i < cityRows.length; i += chunkSize) {
