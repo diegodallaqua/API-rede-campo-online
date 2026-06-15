@@ -32,6 +32,8 @@ export function errorHandler(
   // Erro inesperado
   const isProd = process.env.NODE_ENV === "production";
 
+  console.error("[ErrorHandler]", err);
+  
   return res.status(500).json({
     message: "Internal server error",
     ...(isProd ? {} : { stack: err.stack })
