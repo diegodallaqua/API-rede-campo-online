@@ -1,26 +1,23 @@
 import { Request, Response } from "express";
 import { container } from "tsyringe";
-import { ListPublicationsUseCase } from "../../useCases/ListPublicationsUseCase";
+import { ListProjectPublicationsUseCase } from "../../useCases/ListProjectPublicationsUseCase";
 
-export class ListPublicationsController {
+export class ListProjectPublicationsController {
   async handle(req: Request, res: Response): Promise<Response> {
+    const project_id = Number(req.params.id);
+
     const title =
       typeof req.query.title === "string" ? req.query.title : undefined;
-
-    const project_id =
-      req.query.project_id !== undefined
-        ? Number(req.query.project_id)
-        : undefined;
 
     const page = req.query.page !== undefined ? Number(req.query.page) : 1;
 
     const take = req.query.take !== undefined ? Number(req.query.take) : 10;
 
-    const useCase = container.resolve(ListPublicationsUseCase);
+    const useCase = container.resolve(ListProjectPublicationsUseCase);
 
     const result = await useCase.execute({
-      title,
       project_id,
+      title,
       page,
       take,
     });

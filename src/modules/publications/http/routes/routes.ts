@@ -22,6 +22,7 @@ publicationsRoutes.get(
   celebrate({
     [Segments.QUERY]: Joi.object({
       title: Joi.string().trim().min(1).max(255).optional(),
+      project_id: Joi.number().integer().positive().optional(),
       page: Joi.number().integer().min(1).optional(),
       take: Joi.number().integer().min(1).max(100).optional(),
     }),
@@ -39,6 +40,7 @@ publicationsRoutes.post(
       abstract: Joi.string().trim().min(2).max(2000).required(),
       publication_date: Joi.string().pattern(isoDate).required(),
       doi: Joi.string().trim().max(255).optional().allow(null, ""),
+      project_id: Joi.number().integer().positive().optional().allow(null),
       research_area_ids: Joi.array()
         .items(Joi.number().integer().positive())
         .optional()
@@ -59,6 +61,7 @@ publicationsRoutes.put(
       abstract: Joi.string().trim().min(2).max(2000).required(),
       publication_date: Joi.string().pattern(isoDate).required(),
       doi: Joi.string().trim().max(255).optional().allow(null, ""),
+      project_id: Joi.number().integer().positive().optional().allow(null),
       research_area_ids: Joi.array()
         .items(Joi.number().integer().positive())
         .optional()

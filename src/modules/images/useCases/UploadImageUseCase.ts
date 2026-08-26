@@ -35,7 +35,7 @@ export class UploadImageUseCase {
   /**
    * Validates MIME type, generates three WebP variants via sharp, uploads all
    * to Cloudflare R2, and returns the public URLs. No database record is
-   * created here — the caller stores the desired URL in EventMedia, NewsMedia,
+   * created here - the caller stores the desired URL in EventMedia, NewsMedia,
    * or ProjectMedia via their own endpoints.
    */
   async execute({ file, mimeType, entityType, entityId }: IRequest): Promise<UploadResult> {

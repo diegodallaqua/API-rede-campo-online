@@ -236,90 +236,131 @@ interface IbgeMunicipio {
   } | null;
 }
 
+async function isEmpty(
+  queryRunner: QueryRunner,
+  table: string
+): Promise<boolean> {
+  const rows: { c: number | string }[] = await queryRunner.query(
+    `SELECT COUNT(*) AS c FROM \`${table}\``
+  );
+  return Number(rows[0].c) === 0;
+}
+
+async function hasId(
+  queryRunner: QueryRunner,
+  table: string,
+  id: number
+): Promise<boolean> {
+  const rows: unknown[] = await queryRunner.query(
+    `SELECT 1 FROM \`${table}\` WHERE \`id\` = ? LIMIT 1`,
+    [id]
+  );
+  return rows.length > 0;
+}
+
 export class SeedInitialData20260615000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // States
-    const estadosRes = await fetch(
-      "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
-    );
-    const estados: IbgeEstado[] = await estadosRes.json();
+    // States and cities are seeded together: city rows depend on the ids
+    // generated for the states, so a partially seeded pair is not recoverable
+    // here. Skip both if either table already has data.
+    const seedLocations =
+      (await isEmpty(queryRunner, "state")) &&
+      (await isEmpty(queryRunner, "city"));
 
-    const stateIdByUf: Record<string, number> = {};
-    for (const estado of estados) {
-      const result = await queryRunner.query(
-        "INSERT INTO `state` (`name`) VALUES (?)",
-        [estado.nome]
+    if (seedLocations) {
+      const estadosRes = await fetch(
+        "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
       );
-      stateIdByUf[estado.sigla] = result.insertId;
-    }
+      const estados: IbgeEstado[] = await estadosRes.json();
 
-    // Cities
-    const municipiosRes = await fetch(
-      "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
-    );
-    const municipios: IbgeMunicipio[] = await municipiosRes.json();
+      const stateIdByUf: Record<string, number> = {};
+      for (const estado of estados) {
+        const result = await queryRunner.query(
+          "INSERT INTO `state` (`name`) VALUES (?)",
+          [estado.nome]
+        );
+        stateIdByUf[estado.sigla] = result.insertId;
+      }
 
-    const cityRows: [number, string][] = municipios.map((m) => {
-      const sigla =
-        m.microrregiao?.mesorregiao.UF.sigla ??
-        m["regiao-imediata"]?.["regiao-intermediaria"].UF.sigla;
-      return [stateIdByUf[sigla as string], m.nome];
-    });
-
-    const chunkSize = 500;
-    for (let i = 0; i < cityRows.length; i += chunkSize) {
-      const chunk = cityRows.slice(i, i + chunkSize);
-      const placeholders = chunk.map(() => "(?, ?)").join(", ");
-      const values = chunk.flat();
-      await queryRunner.query(
-        `INSERT INTO \`city\` (\`state_id\`, \`name\`) VALUES ${placeholders}`,
-        values
+      const municipiosRes = await fetch(
+        "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
       );
+      const municipios: IbgeMunicipio[] = await municipiosRes.json();
+
+      const cityRows: [number, string][] = municipios.map((m) => {
+        const sigla =
+          m.microrregiao?.mesorregiao.UF.sigla ??
+          m["regiao-imediata"]?.["regiao-intermediaria"].UF.sigla;
+        return [stateIdByUf[sigla as string], m.nome];
+      });
+
+      const chunkSize = 500;
+      for (let i = 0; i < cityRows.length; i += chunkSize) {
+        const chunk = cityRows.slice(i, i + chunkSize);
+        const placeholders = chunk.map(() => "(?, ?)").join(", ");
+        const values = chunk.flat();
+        await queryRunner.query(
+          `INSERT INTO \`city\` (\`state_id\`, \`name\`) VALUES ${placeholders}`,
+          values
+        );
+      }
     }
 
     // Member roles
-    await queryRunner.query(
-      "INSERT INTO `memberrole` (`id`, `name`) VALUES (1, 'Fundador'), (2, 'Pesquisador'), (3, 'Desenvolvedor')"
-    );
+    if (await isEmpty(queryRunner, "memberrole")) {
+      await queryRunner.query(
+        "INSERT INTO `memberrole` (`id`, `name`) VALUES (1, 'Fundador'), (2, 'Pesquisador'), (3, 'Desenvolvedor')"
+      );
+    }
 
     // Address
-    await queryRunner.query(
-      "INSERT INTO `address` (`id`, `city_id`, `street`, `neighborhood`, `number`, `cep`, `complement`) VALUES (1, 1, 'Rua Cerejeira', 'São Luiz', 661, '85892000', NULL)"
-    );
+    if (!(await hasId(queryRunner, "address", 1))) {
+      await queryRunner.query(
+        "INSERT INTO `address` (`id`, `city_id`, `street`, `neighborhood`, `number`, `cep`, `complement`) VALUES (1, 1, 'Rua Cerejeira', 'São Luiz', 661, '85892000', NULL)"
+      );
+    }
 
     // Organization
-    await queryRunner.query(
-      "INSERT INTO `organization` (`id`, `address_id`, `name`, `logo`) VALUES (1, 1, 'UTFPR', '')"
-    );
+    if (!(await hasId(queryRunner, "organization", 1))) {
+      await queryRunner.query(
+        "INSERT INTO `organization` (`id`, `address_id`, `name`, `logo`) VALUES (1, 1, 'UTFPR', '')"
+      );
+    }
 
     // Project types
-    await queryRunner.query(
-      "INSERT INTO `projecttype` (`id`, `name`) VALUES (1, 'Projeto de Extensão'), (2, 'Projeto de Desenvolvimento Tecnológico e Inovação'), (3, 'Projeto de Pesquisa')"
-    );
+    if (await isEmpty(queryRunner, "projecttype")) {
+      await queryRunner.query(
+        "INSERT INTO `projecttype` (`id`, `name`) VALUES (1, 'Projeto de Extensão'), (2, 'Projeto de Desenvolvimento Tecnológico e Inovação'), (3, 'Projeto de Pesquisa')"
+      );
+    }
 
     // Research areas
-    const researchAreaPlaceholders = RESEARCH_AREAS.map(() => "(?)").join(", ");
-    await queryRunner.query(
-      `INSERT INTO \`researcharea\` (\`name\`) VALUES ${researchAreaPlaceholders}`,
-      RESEARCH_AREAS
-    );
+    if (await isEmpty(queryRunner, "researcharea")) {
+      const researchAreaPlaceholders = RESEARCH_AREAS.map(() => "(?)").join(", ");
+      await queryRunner.query(
+        `INSERT INTO \`researcharea\` (\`name\`) VALUES ${researchAreaPlaceholders}`,
+        RESEARCH_AREAS
+      );
+    }
 
     // Member
-    await queryRunner.query(
-      "INSERT INTO `member` (`id`, `member_role_id`, `organization_id`, `name`, `email`, `description`, `lattes_url`, `linked_in_url`, `profile_picture`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        6,
-        1,
-        1,
-        "Alessandra Matte",
-        "amatte@utfpr.edu.br",
-        MEMBER_DESCRIPTION,
-        "http://lattes.cnpq.br/4891738079879327",
-        null,
-        "https://pub-06ce1715ceb246d8a6cc8501edb72f89.r2.dev/member/1/53107951-97d4-4ca7-b5ca-70078016a430-large.webp",
-        "$2b$10$pA7uVbsXTvC.jSt6019OsOtJZtzOJRrPAWC4UBgqcIAdfHwG5wVBa",
-      ]
-    );
+    if (!(await hasId(queryRunner, "member", 6))) {
+      await queryRunner.query(
+        "INSERT INTO `member` (`id`, `member_role_id`, `organization_id`, `name`, `email`, `description`, `lattes_url`, `linked_in_url`, `profile_picture`, `password`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          6,
+          1,
+          1,
+          "Alessandra Matte",
+          "amatte@utfpr.edu.br",
+          MEMBER_DESCRIPTION,
+          "http://lattes.cnpq.br/4891738079879327",
+          null,
+          "https://pub-06ce1715ceb246d8a6cc8501edb72f89.r2.dev/member/1/53107951-97d4-4ca7-b5ca-70078016a430-large.webp",
+          "$2b$10$pA7uVbsXTvC.jSt6019OsOtJZtzOJRrPAWC4UBgqcIAdfHwG5wVBa",
+        ]
+      );
+    }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

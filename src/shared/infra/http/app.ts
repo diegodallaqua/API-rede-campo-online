@@ -12,14 +12,23 @@ import { errorHandler } from "./middlewares/errorHandler";
 import { routes } from "./routes";
 
 export const app = express();
-app.set('trust proxy', 1);
-app.disable("x-powered-by");
+
+// Atrás de um proxy reverso (Railway, Nginx, etc.) defina TRUST_PROXY com o
+// número de proxies à frente da API. Rodando localmente, deixe 0/ausente para
+// que o rate-limit use o IP real da conexão e não confie em X-Forwarded-For.
+const trustProxy = Number(process.env.TRUST_PROXY ?? 0);
+app.set("trust proxy", trustProxy);
 
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(express.json({ limit: "1mb" }));
 
-const corsOrigin = process.env.CORS_ORIGIN?.split(",").map((s) => s.trim()) ?? "*";
+// Sem CORS_ORIGIN definido, reflete a origem da requisição. Necessário porque
+// `credentials: true` é incompatível com `Access-Control-Allow-Origin: *`.
+const corsOrigin = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
+  : true;
+
 app.use(
   cors({
     origin: corsOrigin,

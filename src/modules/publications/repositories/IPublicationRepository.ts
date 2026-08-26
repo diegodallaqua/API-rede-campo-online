@@ -6,6 +6,7 @@ export interface ICreatePublicationDTO {
   abstract: string;
   publication_date: string;
   doi?: string | null;
+  project_id?: number | null;
 }
 
 export interface IUpdatePublicationDTO extends ICreatePublicationDTO {
@@ -52,12 +53,29 @@ export type PublicationTypeDetails =
   | PublicationBookChapterDetails
   | PublicationThesisDetails;
 
-export type PublicationWithResearchAreas = {
+export type PublicationProject = {
+  id: number;
+  name: string;
+  description: string;
+  status: boolean;
+  begin_date: string;
+  end_date: string | null;
+  projectType: {
+    id: number;
+    name: string;
+  };
+};
+
+export type PublicationWithProject = {
   id: number;
   title: string;
   abstract: string;
   publication_date: string;
   doi: string | null;
+  project: PublicationProject | null;
+};
+
+export type PublicationWithResearchAreas = PublicationWithProject & {
   details: PublicationTypeDetails | null;
   research_areas: {
     id: number;
@@ -68,6 +86,7 @@ export type PublicationWithResearchAreas = {
 
 export type PaginateParams = {
   title?: string;
+  project_id?: number;
   page: number;
   skip: number;
   take: number;

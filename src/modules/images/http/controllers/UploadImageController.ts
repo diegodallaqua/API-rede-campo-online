@@ -6,7 +6,7 @@ import { AppError } from "../../../../shared/errors/AppError";
 export class UploadImageController {
   /**
    * POST /images/upload
-   * Body: multipart/form-data — fields: file (binary), entityType (string), entityId (string)
+   * Body: multipart/form-data - fields: file (binary), entityType (string), entityId (string)
    * Returns: { url_small, url_medium, url_large, file_key, mime_type, size_kb }
    * Use the desired URL in the `media` field when calling EventMedia, NewsMedia or ProjectMedia endpoints.
    */

@@ -1,9 +1,13 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError";
-import { Publication } from "../entities/Publication";
-import { IPublicationRepository } from "../repositories/IPublicationRepository";
+import {
+  IPublicationRepository,
+  PublicationWithProject,
+} from "../repositories/IPublicationRepository";
+import { toPublicationProject } from "../mappers/toPublicationProject";
 import { IResearchAreaRepository } from "../../researchAreas/repositories/IResearchAreaRepository";
 import { IPublicationHasResearchAreasRepository } from "../../publicationHasResearchAreas/repositories/IPublicationHasResearchAreaRepository";
+import { IProjectRepository } from "../../projects/repositories/IProjectRepository";
 
 type IRequest = {
   id: number;
@@ -11,6 +15,7 @@ type IRequest = {
   abstract: string;
   publication_date: string;
   doi?: string | null;
+  project_id?: number | null;
   research_area_ids?: number[];
 };
 
@@ -24,7 +29,10 @@ export class UpdatePublicationUseCase {
     private researchAreaRepository: IResearchAreaRepository,
 
     @inject("PublicationHasResearchAreasRepository")
-    private publicationHasResearchAreasRepository: IPublicationHasResearchAreasRepository
+    private publicationHasResearchAreasRepository: IPublicationHasResearchAreasRepository,
+
+    @inject("ProjectRepository")
+    private projectRepository: IProjectRepository
   ) {}
 
   async execute({
@@ -33,8 +41,9 @@ export class UpdatePublicationUseCase {
     abstract,
     publication_date,
     doi,
+    project_id,
     research_area_ids = [],
-  }: IRequest): Promise<Publication> {
+  }: IRequest): Promise<PublicationWithProject> {
     const publication = await this.publicationRepository.findById(id);
 
     if (!publication) {
@@ -52,6 +61,18 @@ export class UpdatePublicationUseCase {
       const existing = await this.publicationRepository.findByDoi(normalizedDoi);
       if (existing && existing.id !== id) {
         throw new AppError("DOI already exists", 409, "DOI_ALREADY_EXISTS");
+      }
+    }
+
+    const normalizedProjectId = project_id ?? null;
+
+    if (normalizedProjectId !== null) {
+      const projectExists = await this.projectRepository.existsById(
+        normalizedProjectId
+      );
+
+      if (!projectExists) {
+        throw new AppError("Project not found", 404, "PROJECT_NOT_FOUND");
       }
     }
 
@@ -74,6 +95,7 @@ export class UpdatePublicationUseCase {
       abstract: abstract.trim(),
       publication_date,
       doi: normalizedDoi,
+      project_id: normalizedProjectId,
     });
 
     await this.publicationHasResearchAreasRepository.deleteByPublicationId(id);
@@ -85,6 +107,13 @@ export class UpdatePublicationUseCase {
       }))
     );
 
-    return updatedPublication;
+    return {
+      id: updatedPublication.id,
+      title: updatedPublication.title,
+      abstract: updatedPublication.abstract,
+      publication_date: updatedPublication.publication_date,
+      doi: updatedPublication.doi ?? null,
+      project: toPublicationProject(updatedPublication.project),
+    };
   }
 }

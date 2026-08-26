@@ -11,9 +11,11 @@ import { IArticleRepository } from "../../articles/repositories/IArticleReposito
 import { IBookRepository } from "../../books/repositories/IBookRepository";
 import { IBookChapterRepository } from "../../bookChapters/repositories/IBookChapterRepository";
 import { IThesisRepository } from "../../thesis/repositories/IThesisRepository";
+import { toPublicationProject } from "../mappers/toPublicationProject";
 
 type IRequest = {
   title?: string;
+  project_id?: number;
   page: number;
   take: number;
 };
@@ -96,6 +98,7 @@ export class ListPublicationsUseCase {
 
   async execute({
     title,
+    project_id,
     page,
     take,
   }: IRequest): Promise<PublicationWithResearchAreasPaginateProperties> {
@@ -106,6 +109,7 @@ export class ListPublicationsUseCase {
 
     const publications = await this.publicationRepository.findAll({
       title,
+      project_id,
       page: safePage,
       skip,
       take: safeTake,
@@ -129,6 +133,7 @@ export class ListPublicationsUseCase {
           abstract: publication.abstract,
           publication_date: publication.publication_date,
           doi: publication.doi ?? null,
+          project: toPublicationProject(publication.project),
           details,
           research_areas: researchAreas,
           contributors,

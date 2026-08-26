@@ -1,1 +1,1 @@
-// UploadImageUseCase has no injected dependencies — nothing to register.
+// UploadImageUseCase has no injected dependencies - nothing to register.

@@ -6,6 +6,7 @@ import { CreateProjectController } from "../controllers/CreateProjectController"
 import { ListProjectsController } from "../controllers/ListProjectsController";
 import { UpdateProjectController } from "../controllers/UpdateProjectController";
 import { DeleteProjectController } from "../controllers/DeleteProjectController";
+import { ListProjectPublicationsController } from "../controllers/ListProjectPublicationsController";
 
 export const projectsRoutes = Router();
 
@@ -13,6 +14,7 @@ const createController = new CreateProjectController();
 const listController = new ListProjectsController();
 const updateController = new UpdateProjectController();
 const deleteController = new DeleteProjectController();
+const listPublicationsController = new ListProjectPublicationsController();
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -28,6 +30,21 @@ projectsRoutes.get(
     }),
   }),
   listController.handle
+);
+
+projectsRoutes.get(
+  "/:id/publications",
+  celebrate({
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.number().integer().positive().required(),
+    }),
+    [Segments.QUERY]: Joi.object({
+      title: Joi.string().trim().min(1).max(255).optional(),
+      page: Joi.number().integer().min(1).optional(),
+      take: Joi.number().integer().min(1).max(100).optional(),
+    }),
+  }),
+  listPublicationsController.handle
 );
 
 projectsRoutes.use(isAuthenticated);

@@ -1,4 +1,4 @@
-import { Like, Repository } from "typeorm";
+import { FindOptionsWhere, Like, Repository } from "typeorm";
 import { AppDataSource } from "../../../shared/infra/database/data-source";
 import { Publication } from "../entities/Publication";
 import {
@@ -23,16 +23,24 @@ export class PublicationRepository implements IPublicationRepository {
 
   async findAll({
     title,
+    project_id,
     page,
     skip,
     take,
   }: PaginateParams): Promise<PublicationPaginateProperties> {
-    const where = title?.trim()
-      ? { title: Like(`%${title.trim()}%`) }
-      : {};
+    const where: FindOptionsWhere<Publication> = {};
+
+    if (title?.trim()) {
+      where.title = Like(`%${title.trim()}%`);
+    }
+
+    if (project_id !== undefined) {
+      where.project_id = project_id;
+    }
 
     const [data, total] = await this.ormRepo.findAndCount({
       where,
+      relations: { project: { projectType: true } },
       order: {
         publication_date: "DESC",
         title: "ASC",
@@ -52,6 +60,7 @@ export class PublicationRepository implements IPublicationRepository {
   async findById(id: number): Promise<Publication | null> {
     return this.ormRepo.findOne({
       where: { id },
+      relations: { project: { projectType: true } },
     });
   }
 

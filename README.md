@@ -1,103 +1,102 @@
 # API Rede Campo Online
 
-API da plataforma **Rede Campo Online**, um site responsivo voltado ao grupo de pesquisa Rede Campo.
+API da plataforma **Rede Campo Online**, um site responsivo voltado ao grupo de pesquisa Rede Campo. Sistema RESTful desenvolvido em Node.js com TypeScript, usando Express e TypeORM para persistência em MariaDB/MySQL.
 
-## Stack
+## Documentação
 
-- **Node.js** + **TypeScript**
-- **Express 5**
-- **TypeORM** + **MySQL/MariaDB**
-- **TSyringe** (injeção de dependência)
-- **JWT** (autenticação)
-- **Celebrate/Joi** (validação)
-- **Multer** + **Sharp** (upload e processamento de imagens)
-- **Cloudflare R2** (armazenamento de imagens, via AWS S3 SDK)
-- **Helmet**, **CORS**, **express-rate-limit** (segurança)
+Consulte para detalhes completos:
 
-## Arquitetura
+>- [Instalação](md/instalacao.md): Pré-requisitos e instalação local
+>- [Configuração](md/configuracao.md): Variáveis de ambiente e banco de dados
+>- [Como Executar](md/como-executar.md): Execução em dev e produção, scripts npm
+>- [Arquitetura do Projeto](md/arquitetura-do-projeto.md): Padrão modular, DDD, Clean Architecture
+>- [Estrutura do Projeto](md/estrutura-do-projeto.md): Estrutura de diretórios e arquivos
+>- [Sistema de Autenticação](md/sistema-de-autenticacao.md): JWT, blacklist de tokens, senhas
+>- [Documentação da API](md/documentacao-da-api.md): Referência dos endpoints
+>- [Erros comuns](md/erros.md): Troubleshooting
+>- [Estrutura de Logs](md/estrutura-de-logs.md): Logs, PM2, boas práticas
+>- [Contribuição](md/contribuicao.md): Padrões de código, commits, versionamento
+>- [Deploy](md/deploy.md): Produção, PM2, proxy reverso, segurança
+>- [Infraestrutura da VM](README_VM.md): Informações do ambiente hospedado
 
-Organizado em módulos (DDD-like), cada um em `src/modules/<modulo>` contendo:
+## Principais Características
 
-- `entities` — entidades TypeORM
-- `repositories` — interfaces e implementações de repositório
-- `useCases` — regras de negócio
-- `http/controllers` — controllers HTTP
-- `http/routes` — rotas Express
-- `container` — registro de dependências (tsyringe)
+- **Arquitetura Modular**: Domain-Driven Design (DDD) e Clean Architecture
+- **RESTful API**: Endpoints organizados por domínio
+- **TypeScript**: Tipagem forte (`strict`) e manutenção facilitada
+- **MariaDB/MySQL**: Persistência relacional, schema versionado por migrations
+- **JWT Authentication**: Tokens de acesso com blacklist no logout
+- **TSyringe**: Injeção de dependências
+- **Celebrate/Joi**: Validação declarada nas rotas
+- **Cloudflare R2**: Armazenamento de imagens, com variantes WebP geradas pelo Sharp
+- **Helmet, CORS e rate limit**: Camada de segurança HTTP
 
-Infraestrutura compartilhada em `src/shared`:
+---
 
-- `infra/http` — app Express, rotas globais, middlewares, error handler
-- `infra/database` — data source TypeORM e migrations
-- `container` — registro global de dependências
+## Instalação Rápida
 
-## Pré-requisitos
+1. **Clone o repositório:**
 
-- Node.js 18+
-- MySQL/MariaDB
-- Conta Cloudflare R2 (para upload de imagens)
+   ```bash
+   git clone https://github.com/diegodallaqua/API-rede-campo-online.git
+   ```
 
-## Configuração
+   ```bash
+   cd API-rede-campo-online
+   ```
 
-1. Instale as dependências:
+2. **Instale as dependências:**
 
    ```bash
    npm install
    ```
 
-2. Copie `.env.example` para `.env` e preencha as variáveis:
+3. **Configure o ambiente:**
 
    ```bash
    cp .env.example .env
+   # Edite o .env conforme seu ambiente
    ```
 
-   | Variável | Descrição |
-   | --- | --- |
-   | `PORT` | Porta do servidor (padrão `3333`) |
-   | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_NAME`, `DB_PASS` | Credenciais do banco MariaDB/MySQL |
-   | `JWT_SECRET`, `JWT_EXPIRES_IN` | Configuração do token JWT |
-   | `CORS_ORIGIN` | Origens permitidas (separadas por vírgula) ou `*` |
-   | `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX` | Configuração de rate limit |
-   | `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL` | Credenciais do Cloudflare R2 para upload de imagens |
+4. **Banco de dados:**
 
-3. Execute as migrations:
+   ```sql
+   CREATE DATABASE db_rede_campo_online;
+   ```
 
    ```bash
    npm run migration:run
    ```
 
-## Scripts
+5. **Execute em desenvolvimento:**
 
-| Script | Descrição |
-| --- | --- |
-| `npm run dev` | Inicia o servidor em modo desenvolvimento (hot reload) |
-| `npm run migration:generate` | Gera uma nova migration a partir das entidades |
-| `npm run migration:run` | Executa as migrations pendentes |
-| `npm run migration:revert` | Desfaz a última migration |
-| `npm run lint` | Executa o ESLint |
-| `npm run format` | Formata o código com Prettier |
+   ```bash
+   npm run dev
+   ```
 
-## Endpoints principais
+6. **Verifique:** `GET /health` deve responder `{ "ok": true }`.
 
-A API expõe um endpoint de health check em `GET /health` e os seguintes recursos sob `/`:
+Para detalhes, consulte [Instalação](md/instalacao.md) e [Configuração](md/configuracao.md).
 
-- `/sessions` — autenticação (login/logout)
-- `/states`, `/cities`, `/addresses` — localização
-- `/organizations`, `/member-roles`, `/members` — membros e organizações
-- `/project-types`, `/projects`, `/project-media` — projetos
-- `/events`, `/event-media` — eventos
-- `/news`, `/news-media` — notícias
-- `/research-areas` — áreas de pesquisa
-- `/publications`, `/external-authors`, `/contributor-role`, `/publication-contributors` — publicações e contribuidores
-- `/articles`, `/thesis`, `/books`, `/book-chapters` — tipos de publicação
-- `/images` — upload de imagens (Cloudflare R2)
+---
 
-A maioria das rotas de escrita exige autenticação via JWT (`Authorization: Bearer <token>`).
+## Recursos disponíveis
 
-## Segurança
+A API expõe um health check em `GET /health` e os seguintes recursos:
 
-- `helmet` para headers HTTP seguros
-- `cors` configurável via `CORS_ORIGIN`
-- `express-rate-limit` para limitar requisições
-- Senhas com `bcryptjs`
-- Blacklist de tokens JWT no logout (`TokenBlacklist`)
+- `/sessions` - autenticação (login e logout)
+- `/states`, `/cities`, `/addresses` - localização
+- `/organizations`, `/member-roles`, `/members` - membros e organizações
+- `/project-types`, `/projects`, `/project-media` - projetos
+- `/events`, `/event-media` - eventos
+- `/news`, `/news-media` - notícias
+- `/research-areas` - áreas de pesquisa
+- `/publications`, `/external-authors`, `/contributor-role`, `/publication-contributors` - publicações e contribuidores
+- `/articles`, `/thesis`, `/books`, `/book-chapters` - tipos de publicação
+- `/images` - upload de imagens (Cloudflare R2)
+
+Em regra, a leitura é pública e a escrita exige autenticação via JWT (`Authorization: Bearer <token>`). As exceções e os parâmetros de cada endpoint estão em [Documentação da API](md/documentacao-da-api.md).
+
+---
+
+**© 2026 API Rede Campo Online** - Backend do site do grupo de pesquisa Rede Campo, desenvolvido com Node.js, TypeScript e arquitetura modular.
