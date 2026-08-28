@@ -19,7 +19,7 @@ mysql -u root -p --port=3307
 ### Conexão recusada
 
 ```
-Error: connect ECONNREFUSED 127.0.0.1:3307
+Error: connect ECONNREFUSED 192.168.0.131:3307
 ```
 
 **Causas prováveis:**

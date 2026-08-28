@@ -79,7 +79,7 @@ Antes de executar o projeto, certifique-se de ter instalado:
 7. **Verifique se subiu:**
 
    ```bash
-   curl http://127.0.0.1:3333/health
+   curl http://192.168.0.131:3333/health
    ```
 
    A resposta esperada é `{"ok":true}`.

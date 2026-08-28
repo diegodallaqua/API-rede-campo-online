@@ -197,7 +197,7 @@ server {
     server_name <dominio_da_api>;
 
     location / {
-        proxy_pass http://127.0.0.1:3333;
+        proxy_pass http://192.168.0.131:3333;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -232,8 +232,8 @@ E adicione ao virtual host em `/etc/apache2/sites-available/000-default.conf`:
     ServerName <dominio_da_api>
 
     ProxyPreserveHost On
-    ProxyPass        / http://127.0.0.1:3333/
-    ProxyPassReverse / http://127.0.0.1:3333/
+    ProxyPass        / http://192.168.0.131:3333/
+    ProxyPassReverse / http://192.168.0.131:3333/
 
     RequestHeader set X-Forwarded-Proto "http"
 </VirtualHost>
@@ -250,7 +250,7 @@ Se as portas forem alteradas, ajuste também `/etc/apache2/ports.conf`.
 ### 8. Verificar
 
 ```bash
-curl http://127.0.0.1:3333/health
+curl http://192.168.0.131:3333/health
 ```
 
 ```bash

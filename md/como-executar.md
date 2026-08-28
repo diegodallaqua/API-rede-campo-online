@@ -8,12 +8,12 @@
 npm run dev
 ```
 
-O `ts-node-dev` roda o TypeScript direto, com hot reload (`--respawn`) e sem checagem de tipos em tempo de execução (`--transpile-only`). O servidor sobe em `http://127.0.0.1:3333` ou na porta definida em `PORT`.
+O `ts-node-dev` roda o TypeScript direto, com hot reload (`--respawn`) e sem checagem de tipos em tempo de execução (`--transpile-only`). O servidor sobe em `http://192.168.0.131:3333` ou na porta definida em `PORT`.
 
 Confirme que subiu:
 
 ```bash
-curl http://127.0.0.1:3333/health
+curl http://192.168.0.131:3333/health
 ```
 
 Resposta esperada: `{"ok":true}`.

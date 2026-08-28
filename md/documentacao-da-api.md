@@ -6,7 +6,7 @@
 
 ## Convenções gerais
 
-- **Base URL (desenvolvimento):** `http://127.0.0.1:3333`
+- **Base URL (desenvolvimento):** `http://192.168.0.131:3333`
 - **Formato:** JSON em todas as requisições e respostas, exceto o upload de imagem (`multipart/form-data`).
 - **Autenticação:** header `Authorization: Bearer <token>` nas rotas protegidas. Veja [Sistema de Autenticação](sistema-de-autenticacao.md).
 - **Limite do corpo da requisição:** 1 MB (`express.json`).

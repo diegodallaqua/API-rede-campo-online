@@ -25,7 +25,7 @@ cp .env.example .env
 
 | Variável | Obrigatória | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `DB_HOST` | Não | `127.0.0.1` | Host do MariaDB/MySQL |
+| `DB_HOST` | Não | `192.168.0.131` | Host do MariaDB/MySQL |
 | `DB_PORT` | Não | `3307` | Porta do banco. A instalação padrão do MariaDB/MySQL usa `3306` |
 | `DB_USER` | Não | `root` | Usuário do banco |
 | `DB_PASS` | Não | vazio | Senha do banco |

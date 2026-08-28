@@ -64,7 +64,7 @@
 6. **Verifique**
 
    ```bash
-   curl http://127.0.0.1:3333/health
+   curl http://192.168.0.131:3333/health
    ```
 
 ---

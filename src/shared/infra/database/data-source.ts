@@ -7,8 +7,8 @@ const isProd = process.env.NODE_ENV === "production";
 
 export const AppDataSource = new DataSource({
   type: "mariadb",
-  host: process.env.DB_HOST ?? "127.0.0.1",
-  port: Number(process.env.DB_PORT ?? 3307),
+  host: process.env.DB_HOST ?? "192.168.0.131",
+  port: Number(process.env.DB_PORT ?? 3306),
   username: process.env.DB_USER ?? "root",
   password: process.env.DB_PASS ?? "",
   database: process.env.DB_NAME ?? "db_rede_campo_online",
