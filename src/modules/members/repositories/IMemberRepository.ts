@@ -14,6 +14,7 @@ export type MemberListItem = {
   description: string;
   lattes_url: string | null;
   linked_in_url: string | null;
+  instagram_url: string | null;
   profile_picture: string | null;
 
   member_role: {
@@ -44,6 +45,7 @@ export interface ICreateMemberDTO {
   description: string;
   lattes_url?: string | null;
   linked_in_url?: string | null;
+  instagram_url?: string | null;
   profile_picture?: string | null;
   password?: string | null;
 }

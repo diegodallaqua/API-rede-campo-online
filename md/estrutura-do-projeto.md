@@ -88,7 +88,10 @@ src/shared/infra/typeorm/migrations/
 ├── 20260611000000-CascadeDeletePublicationChildren.ts
 ├── 20260613000000-WidenMemberDescription.ts
 ├── 20260615000000-SeedInitialData.ts        # Dados iniciais (idempotente)
-└── 20260811000000-AddProjectIdToPublications.ts
+├── 20260811000000-AddProjectIdToPublications.ts
+├── 20260827010000-CreateAcademicWorkType.ts
+├── 20260827020000-RenameThesisToAcademicWork.ts
+└── 20260827030000-AddBookRelationAndPagesToBookChapter.ts
 ```
 
 > A ordem de execução é determinada pelo timestamp no início do nome. Nunca edite uma migration já aplicada em produção - crie uma nova.
@@ -144,7 +147,8 @@ src/modules/publications/
 | `newsHasResearchAreas` | - | `NewsHasResearchArea` | Tabela de junção, sem rotas próprias |
 | `publications` | `/publications` | `Publication` | CRUD completo |
 | `articles` | `/articles` | `Article` | Especialização de publicação |
-| `thesis` | `/thesis` | `Thesis` | Especialização de publicação |
+| `academicWork` | `/academic-works` | `AcademicWork` | Especialização de publicação |
+| `academicWorkTypes` | `/academic-work-types` | `AcademicWorkType` | Somente leitura |
 | `books` | `/books` | `Book` | Especialização de publicação |
 | `bookChapters` | `/book-chapters` | `BookChapter` | Especialização de publicação |
 | `externalAuthors` | `/external-authors` | `ExternalAuthor` | Autores que não são membros |

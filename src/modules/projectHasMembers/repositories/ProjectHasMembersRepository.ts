@@ -54,6 +54,7 @@ export class ProjectHasMembersRepository
         "m.description as m_description",
         "m.lattes_url as m_lattes_url",
         "m.linked_in_url as m_linked_in_url",
+        "m.instagram_url as m_instagram_url",
         "m.profile_picture as m_profile_picture",
         "mr.id as mr_id",
         "mr.name as mr_name",
@@ -73,6 +74,7 @@ export class ProjectHasMembersRepository
       description: row.m_description,
       lattes_url: row.m_lattes_url ?? null,
       linked_in_url: row.m_linked_in_url ?? null,
+      instagram_url: row.m_instagram_url ?? null,
       profile_picture: row.m_profile_picture ?? null,
       member_role: {
         id: Number(row.mr_id),

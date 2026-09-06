@@ -1,6 +1,8 @@
-export type BookChapterListItem = {
-  book_name: string;
-  chapter_number: number;
+export type BookChapterBookItem = {
+  id: number;
+  publisher: string;
+  edition: string;
+  isbn: string;
 
   publication: {
     id: number;
@@ -9,6 +11,24 @@ export type BookChapterListItem = {
     publication_date: string;
     doi: string | null;
   };
+};
+
+export type BookChapterListItem = {
+  book_name: string;
+  chapter_number: number;
+  isbn: string | null;
+  start_page: string;
+  end_page: string;
+
+  publication: {
+    id: number;
+    title: string;
+    abstract: string;
+    publication_date: string;
+    doi: string | null;
+  };
+
+  book: BookChapterBookItem | null;
 };
 
 export type BookChapterResearchAreaItem = {
@@ -26,6 +46,9 @@ export type BookChapterContributorItem = {
 export type BookChapterListItemEnriched = {
   book_name: string;
   chapter_number: number;
+  isbn: string | null;
+  start_page: string;
+  end_page: string;
   publication: {
     id: number;
     title: string;
@@ -35,6 +58,7 @@ export type BookChapterListItemEnriched = {
     research_areas: BookChapterResearchAreaItem[];
     contributors: BookChapterContributorItem[];
   };
+  book: BookChapterBookItem | null;
 };
 
 export type BookChapterEnrichedPaginateProperties = {
@@ -46,14 +70,19 @@ export type BookChapterEnrichedPaginateProperties = {
 
 export interface ICreateBookChapterDTO {
   publication_id: number;
+  book_id?: number | null;
   book_name: string;
   chapter_number: number;
+  isbn?: string | null;
+  start_page: string;
+  end_page: string;
 }
 
 export interface IUpdateBookChapterDTO extends ICreateBookChapterDTO {}
 
 export type PaginateParams = {
   title?: string;
+  book_id?: number;
   page: number;
   skip: number;
   take: number;

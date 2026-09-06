@@ -5,6 +5,7 @@ import {
   IUpdateBookChapterDTO,
 } from "../repositories/IBookChapterRepository";
 import { IPublicationRepository } from "../../publications/repositories/IPublicationRepository";
+import { IBookRepository } from "../../books/repositories/IBookRepository";
 
 @injectable()
 export class UpdateBookChapterUseCase {
@@ -13,13 +14,23 @@ export class UpdateBookChapterUseCase {
     private bookChapterRepository: IBookChapterRepository,
 
     @inject("PublicationRepository")
-    private publicationRepository: IPublicationRepository
+    private publicationRepository: IPublicationRepository,
+
+    @inject("BookRepository")
+    private bookRepository: IBookRepository
   ) {}
 
   async execute(data: IUpdateBookChapterDTO): Promise<void> {
     const publication = await this.publicationRepository.findById(data.publication_id);
     if (!publication) {
       throw new AppError("Publication not found", 404, "PUBLICATION_NOT_FOUND");
+    }
+
+    if (data.book_id) {
+      const bookExists = await this.bookRepository.existsByPublicationId(data.book_id);
+      if (!bookExists) {
+        throw new AppError("Book not found", 404, "BOOK_NOT_FOUND");
+      }
     }
 
     const exists = await this.bookChapterRepository.existsByPublicationId(data.publication_id);
@@ -37,8 +48,12 @@ export class UpdateBookChapterUseCase {
 
     await this.bookChapterRepository.update({
       publication_id: data.publication_id,
+      book_id: data.book_id ?? null,
       book_name: data.book_name.trim(),
       chapter_number: data.chapter_number,
+      isbn: data.isbn?.trim() || null,
+      start_page: data.start_page.trim(),
+      end_page: data.end_page.trim(),
     });
   }
 }

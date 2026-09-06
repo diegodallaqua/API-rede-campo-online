@@ -19,6 +19,7 @@ bookChaptersRoutes.get(
   celebrate({
     [Segments.QUERY]: Joi.object({
       title: Joi.string().trim().min(1).max(255).optional(),
+      book_id: Joi.number().integer().positive().optional(),
       page: Joi.number().integer().min(1).optional(),
       take: Joi.number().integer().min(1).max(100).optional(),
     }),
@@ -33,8 +34,12 @@ bookChaptersRoutes.post(
   celebrate({
     [Segments.BODY]: Joi.object({
       publication_id: Joi.number().integer().positive().required(),
+      book_id: Joi.number().integer().positive().optional().allow(null),
       book_name: Joi.string().trim().min(2).max(255).required(),
       chapter_number: Joi.number().integer().positive().required(),
+      isbn: Joi.string().trim().max(50).optional().allow(null, ""),
+      start_page: Joi.string().trim().min(1).max(20).required(),
+      end_page: Joi.string().trim().min(1).max(20).required(),
     }),
   }),
   createController.handle
@@ -47,8 +52,12 @@ bookChaptersRoutes.put(
       publication_id: Joi.number().integer().positive().required(),
     }),
     [Segments.BODY]: Joi.object({
+      book_id: Joi.number().integer().positive().optional().allow(null),
       book_name: Joi.string().trim().min(2).max(255).required(),
       chapter_number: Joi.number().integer().positive().required(),
+      isbn: Joi.string().trim().max(50).optional().allow(null, ""),
+      start_page: Joi.string().trim().min(1).max(20).required(),
+      end_page: Joi.string().trim().min(1).max(20).required(),
     }),
   }),
   updateController.handle

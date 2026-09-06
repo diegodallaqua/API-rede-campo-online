@@ -8,6 +8,7 @@ import { IPublicationContributorRepository } from "../../publicationContributors
 
 type IRequest = {
   title?: string;
+  book_id?: number;
   page: number;
   take: number;
 };
@@ -27,6 +28,7 @@ export class ListBookChaptersUseCase {
 
   async execute({
     title,
+    book_id,
     page,
     take,
   }: IRequest): Promise<BookChapterEnrichedPaginateProperties> {
@@ -37,6 +39,7 @@ export class ListBookChaptersUseCase {
 
     const bookChapters = await this.bookChapterRepository.findAll({
       title,
+      book_id,
       page: safePage,
       skip,
       take: safeTake,
@@ -56,6 +59,10 @@ export class ListBookChaptersUseCase {
         return {
           book_name: chapter.book_name,
           chapter_number: chapter.chapter_number,
+          isbn: chapter.isbn,
+          start_page: chapter.start_page,
+          end_page: chapter.end_page,
+          book: chapter.book,
           publication: {
             ...chapter.publication,
             research_areas,

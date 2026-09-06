@@ -1,23 +1,24 @@
 import { inject, injectable } from "tsyringe";
 import {
-  IThesisRepository,
-  ThesisEnrichedPaginateProperties,
-} from "../repositories/IThesisRepository";
+  IAcademicWorkRepository,
+  AcademicWorkEnrichedPaginateProperties,
+} from "../repositories/IAcademicWorkRepository";
 import { IPublicationHasResearchAreasRepository } from "../../publicationHasResearchAreas/repositories/IPublicationHasResearchAreaRepository";
 import { IPublicationContributorRepository } from "../../publicationContributors/repositories/IPublicationContributorRepository";
 
 type IRequest = {
   title?: string;
   organization_id?: number;
+  academic_work_type_id?: number;
   page: number;
   take: number;
 };
 
 @injectable()
-export class ListThesisUseCase {
+export class ListAcademicWorkUseCase {
   constructor(
-    @inject("ThesisRepository")
-    private thesisRepository: IThesisRepository,
+    @inject("AcademicWorkRepository")
+    private academicWorkRepository: IAcademicWorkRepository,
 
     @inject("PublicationHasResearchAreasRepository")
     private publicationHasResearchAreasRepository: IPublicationHasResearchAreasRepository,
@@ -29,38 +30,42 @@ export class ListThesisUseCase {
   async execute({
     title,
     organization_id,
+    academic_work_type_id,
     page,
     take,
-  }: IRequest): Promise<ThesisEnrichedPaginateProperties> {
+  }: IRequest): Promise<AcademicWorkEnrichedPaginateProperties> {
     const safePage = Number.isFinite(page) && page > 0 ? page : 1;
     const safeTake = Number.isFinite(take) && take > 0 && take <= 100 ? take : 10;
 
     const skip = (safePage - 1) * safeTake;
 
-    const theses = await this.thesisRepository.findAll({
+    const academicWorks = await this.academicWorkRepository.findAll({
       title,
       organization_id,
+      academic_work_type_id,
       page: safePage,
       skip,
       take: safeTake,
     });
 
     const enrichedData = await Promise.all(
-      theses.data.map(async (thesis) => {
+      academicWorks.data.map(async (academicWork) => {
         const [research_areas, contributors] = await Promise.all([
           this.publicationHasResearchAreasRepository.findResearchAreasByPublicationId(
-            thesis.publication.id
+            academicWork.publication.id
           ),
           this.publicationContributorRepository.findByPublicationId(
-            thesis.publication.id
+            academicWork.publication.id
           ),
         ]);
 
         return {
-          number_of_pages: thesis.number_of_pages,
-          organization: thesis.organization,
+          number_of_pages: academicWork.number_of_pages,
+          defense_date: academicWork.defense_date,
+          organization: academicWork.organization,
+          academic_work_type: academicWork.academic_work_type,
           publication: {
-            ...thesis.publication,
+            ...academicWork.publication,
             research_areas,
             contributors,
           },
@@ -69,9 +74,9 @@ export class ListThesisUseCase {
     );
 
     return {
-      per_page: theses.per_page,
-      total: theses.total,
-      current_page: theses.current_page,
+      per_page: academicWorks.per_page,
+      total: academicWorks.total,
+      current_page: academicWorks.current_page,
       data: enrichedData,
     };
   }

@@ -215,6 +215,7 @@ export class PublicationContributorRepository
         "m.description as m_description",
         "m.lattes_url as m_lattes_url",
         "m.linked_in_url as m_linked_in_url",
+        "m.instagram_url as m_instagram_url",
         "m.profile_picture as m_profile_picture",
         "mr.id as mr_id",
         "mr.name as mr_name",
@@ -242,6 +243,7 @@ export class PublicationContributorRepository
             description: raw.m_description,
             lattes_url: raw.m_lattes_url ?? null,
             linked_in_url: raw.m_linked_in_url ?? null,
+            instagram_url: raw.m_instagram_url ?? null,
             profile_picture: raw.m_profile_picture ?? null,
             member_role: { id: Number(raw.mr_id), name: raw.mr_name },
             organization: {

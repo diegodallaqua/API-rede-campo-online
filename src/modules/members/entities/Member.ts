@@ -45,6 +45,9 @@ export class Member {
   linked_in_url?: string | null;
 
   @Column({ type: "varchar", length: 255, nullable: true })
+  instagram_url?: string | null;
+
+  @Column({ type: "varchar", length: 255, nullable: true })
   profile_picture?: string | null;
 
   @Column({ type: "varchar", length: 255, nullable: true, select: false })

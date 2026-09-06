@@ -47,6 +47,7 @@ export class UpdateMemberUseCase {
       description: data.description.trim(),
       lattes_url: data.lattes_url?.trim() ?? null,
       linked_in_url: data.linked_in_url?.trim() ?? null,
+      instagram_url: data.instagram_url?.trim() ?? null,
       profile_picture: data.profile_picture?.trim() ?? null,
       password: passwordHash,
     });

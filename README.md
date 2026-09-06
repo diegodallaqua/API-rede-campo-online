@@ -92,7 +92,8 @@ A API expõe um health check em `GET /health` e os seguintes recursos:
 - `/news`, `/news-media` - notícias
 - `/research-areas` - áreas de pesquisa
 - `/publications`, `/external-authors`, `/contributor-role`, `/publication-contributors` - publicações e contribuidores
-- `/articles`, `/thesis`, `/books`, `/book-chapters` - tipos de publicação
+- `/articles`, `/academic-works`, `/books`, `/book-chapters` - tipos de publicação
+- `/academic-work-types` - tipos de trabalho acadêmico (somente leitura)
 - `/images` - upload de imagens (Cloudflare R2)
 
 Em regra, a leitura é pública e a escrita exige autenticação via JWT (`Authorization: Bearer <token>`). As exceções e os parâmetros de cada endpoint estão em [Documentação da API](md/documentacao-da-api.md).

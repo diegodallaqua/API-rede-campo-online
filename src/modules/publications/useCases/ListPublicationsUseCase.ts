@@ -10,7 +10,7 @@ import { IPublicationContributorRepository } from "../../publicationContributors
 import { IArticleRepository } from "../../articles/repositories/IArticleRepository";
 import { IBookRepository } from "../../books/repositories/IBookRepository";
 import { IBookChapterRepository } from "../../bookChapters/repositories/IBookChapterRepository";
-import { IThesisRepository } from "../../thesis/repositories/IThesisRepository";
+import { IAcademicWorkRepository } from "../../academicWork/repositories/IAcademicWorkRepository";
 import { toPublicationProject } from "../mappers/toPublicationProject";
 
 type IRequest = {
@@ -41,18 +41,18 @@ export class ListPublicationsUseCase {
     @inject("BookChapterRepository")
     private bookChapterRepository: IBookChapterRepository,
 
-    @inject("ThesisRepository")
-    private thesisRepository: IThesisRepository
+    @inject("AcademicWorkRepository")
+    private academicWorkRepository: IAcademicWorkRepository
   ) {}
 
   private async resolveTypeDetails(
     publication_id: number
   ): Promise<PublicationTypeDetails | null> {
-    const [article, book, bookChapter, thesis] = await Promise.all([
+    const [article, book, bookChapter, academicWork] = await Promise.all([
       this.articleRepository.findByIdWithRelations(publication_id),
       this.bookRepository.findByIdWithRelations(publication_id),
       this.bookChapterRepository.findByIdWithRelations(publication_id),
-      this.thesisRepository.findByIdWithRelations(publication_id),
+      this.academicWorkRepository.findByIdWithRelations(publication_id),
     ]);
 
     if (article) {
@@ -82,14 +82,20 @@ export class ListPublicationsUseCase {
         type: "book_chapter",
         book_name: bookChapter.book_name,
         chapter_number: bookChapter.chapter_number,
+        isbn: bookChapter.isbn,
+        start_page: bookChapter.start_page,
+        end_page: bookChapter.end_page,
+        book: bookChapter.book,
       };
     }
 
-    if (thesis) {
+    if (academicWork) {
       return {
-        type: "thesis",
-        number_of_pages: thesis.number_of_pages,
-        organization: thesis.organization,
+        type: "academic_work",
+        number_of_pages: academicWork.number_of_pages,
+        defense_date: academicWork.defense_date,
+        organization: academicWork.organization,
+        academic_work_type: academicWork.academic_work_type,
       };
     }
 

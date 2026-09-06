@@ -2,24 +2,27 @@ import { Router } from "express";
 import { celebrate, Joi, Segments } from "celebrate";
 import { isAuthenticated } from "../../../../shared/infra/http/middlewares/isAuthenticated";
 
-import { CreateThesisController } from "../controllers/CreateThesisController";
-import { ListThesisController } from "../controllers/ListThesisController";
-import { UpdateThesisController } from "../controllers/UpdateThesisController";
-import { DeleteThesisController } from "../controllers/DeleteThesisController";
+import { CreateAcademicWorkController } from "../controllers/CreateAcademicWorkController";
+import { ListAcademicWorkController } from "../controllers/ListAcademicWorkController";
+import { UpdateAcademicWorkController } from "../controllers/UpdateAcademicWorkController";
+import { DeleteAcademicWorkController } from "../controllers/DeleteAcademicWorkController";
 
-export const thesisRoutes = Router();
+export const academicWorkRoutes = Router();
 
-const createController = new CreateThesisController();
-const listController = new ListThesisController();
-const updateController = new UpdateThesisController();
-const deleteController = new DeleteThesisController();
+const createController = new CreateAcademicWorkController();
+const listController = new ListAcademicWorkController();
+const updateController = new UpdateAcademicWorkController();
+const deleteController = new DeleteAcademicWorkController();
 
-thesisRoutes.get(
+const isoDate = /^\d{4}-\d{2}-\d{2}$/;
+
+academicWorkRoutes.get(
   "/",
   celebrate({
     [Segments.QUERY]: Joi.object({
       title: Joi.string().trim().min(1).max(255).optional(),
       organization_id: Joi.number().integer().positive().optional(),
+      academic_work_type_id: Joi.number().integer().positive().optional(),
       page: Joi.number().integer().min(1).optional(),
       take: Joi.number().integer().min(1).max(100).optional(),
     }),
@@ -27,21 +30,23 @@ thesisRoutes.get(
   listController.handle
 );
 
-thesisRoutes.use(isAuthenticated);
+academicWorkRoutes.use(isAuthenticated);
 
-thesisRoutes.post(
+academicWorkRoutes.post(
   "/",
   celebrate({
     [Segments.BODY]: Joi.object({
       publication_id: Joi.number().integer().positive().required(),
       organization_id: Joi.number().integer().positive().required(),
+      academic_work_type_id: Joi.number().integer().positive().required(),
+      defense_date: Joi.string().pattern(isoDate).required(),
       number_of_pages: Joi.number().integer().positive().required(),
     }),
   }),
   createController.handle
 );
 
-thesisRoutes.put(
+academicWorkRoutes.put(
   "/:publication_id",
   celebrate({
     [Segments.PARAMS]: Joi.object({
@@ -49,13 +54,15 @@ thesisRoutes.put(
     }),
     [Segments.BODY]: Joi.object({
       organization_id: Joi.number().integer().positive().required(),
+      academic_work_type_id: Joi.number().integer().positive().required(),
+      defense_date: Joi.string().pattern(isoDate).required(),
       number_of_pages: Joi.number().integer().positive().required(),
     }),
   }),
   updateController.handle
 );
 
-thesisRoutes.delete(
+academicWorkRoutes.delete(
   "/:publication_id",
   celebrate({
     [Segments.PARAMS]: Joi.object({

@@ -46,6 +46,7 @@ export class MemberRepository implements IMemberRepository {
       description: raw.m_description,
       lattes_url: raw.m_lattes_url ?? null,
       linked_in_url: raw.m_linked_in_url ?? null,
+      instagram_url: raw.m_instagram_url ?? null,
       profile_picture: raw.m_profile_picture ?? null,
 
       member_role: {
@@ -81,6 +82,7 @@ export class MemberRepository implements IMemberRepository {
         "m.description as m_description",
         "m.lattes_url as m_lattes_url",
         "m.linked_in_url as m_linked_in_url",
+        "m.instagram_url as m_instagram_url",
         "m.profile_picture as m_profile_picture",
 
         "r.id as r_id",   
@@ -135,6 +137,7 @@ export class MemberRepository implements IMemberRepository {
         "m.description as m_description",
         "m.lattes_url as m_lattes_url",
         "m.linked_in_url as m_linked_in_url",
+        "m.instagram_url as m_instagram_url",
         "m.profile_picture as m_profile_picture",
         "r.name as r_name",
         "o.id as o_id",

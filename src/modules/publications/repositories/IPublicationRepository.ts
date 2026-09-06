@@ -35,15 +35,30 @@ export type PublicationBookChapterDetails = {
   type: "book_chapter";
   book_name: string;
   chapter_number: number;
+  isbn: string | null;
+  start_page: string;
+  end_page: string;
+  book: {
+    id: number;
+    publisher: string;
+    edition: string;
+    isbn: string;
+  } | null;
 };
 
-export type PublicationThesisDetails = {
-  type: "thesis";
+export type PublicationAcademicWorkDetails = {
+  type: "academic_work";
   number_of_pages: number;
+  defense_date: string;
   organization: {
     id: number;
     name: string;
     logo: string;
+  };
+  academic_work_type: {
+    id: number;
+    name: string;
+    degree_level: string;
   };
 };
 
@@ -51,7 +66,7 @@ export type PublicationTypeDetails =
   | PublicationArticleDetails
   | PublicationBookDetails
   | PublicationBookChapterDetails
-  | PublicationThesisDetails;
+  | PublicationAcademicWorkDetails;
 
 export type PublicationProject = {
   id: number;

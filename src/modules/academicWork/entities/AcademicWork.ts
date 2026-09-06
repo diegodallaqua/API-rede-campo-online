@@ -9,10 +9,12 @@ import {
 } from "typeorm";
 import { Publication } from "../../publications/entities/Publication";
 import { Organization } from "../../organizations/entities/Organization";
+import { AcademicWorkType } from "../../academicWorkTypes/entities/AcademicWorkType";
 
-@Entity("thesis")
+@Entity("academicwork")
 @Index(["organization_id"])
-export class Thesis {
+@Index(["academic_work_type_id"])
+export class AcademicWork {
   @PrimaryColumn({ type: "int" })
   publication_id!: number;
 
@@ -26,6 +28,16 @@ export class Thesis {
   @ManyToOne(() => Organization, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
   @JoinColumn({ name: "organization_id" })
   organization!: Organization;
+
+  @Column({ type: "int" })
+  academic_work_type_id!: number;
+
+  @ManyToOne(() => AcademicWorkType, { onDelete: "RESTRICT", onUpdate: "CASCADE" })
+  @JoinColumn({ name: "academic_work_type_id" })
+  academic_work_type!: AcademicWorkType;
+
+  @Column({ type: "date" })
+  defense_date!: string;
 
   @Column({ type: "int" })
   number_of_pages!: number;

@@ -155,7 +155,7 @@ Somente leitura. Os registros (`Fundador`, `Pesquisador`, `Desenvolvedor`) vêm 
 | Método | Rota | Auth | Parâmetros |
 | --- | --- | --- | --- |
 | `GET` | `/members` | Não | `search`, `member_role_id`, `organization_id`, `page`, `take` |
-| `POST` | `/members` | **Sim** | `member_role_id`, `organization_id`, `name`, `email`, `password`, `description`, `lattes_url`, `linked_in_url`, `profile_picture` |
+| `POST` | `/members` | **Sim** | `member_role_id`, `organization_id`, `name`, `email`, `password`, `description`, `lattes_url`, `linked_in_url`, `instagram_url`, `profile_picture` |
 | `PUT` | `/members/:id` | **Sim** | Mesmos campos do `POST` |
 | `DELETE` | `/members/:id` | **Sim** | - |
 
@@ -306,7 +306,7 @@ O `project_id` é aceito como parâmetro de entrada (filtro e corpo), mas a resp
 }
 ```
 
-O campo `details.type` assume os valores `article`, `book`, `book_chapter` ou `thesis`, e é `null` quando a publicação ainda não foi especializada.
+O campo `details.type` assume os valores `article`, `book`, `book_chapter` ou `academic_work`, e é `null` quando a publicação ainda não foi especializada.
 
 ### Especializações de publicação
 
@@ -315,11 +315,23 @@ Cada tipo estende uma publicação existente e usa `publication_id` como identif
 | Recurso | Rotas | Auth (escrita) | Campos próprios |
 | --- | --- | --- | --- |
 | `/articles` | `GET /`, `POST /`, `PUT /:publication_id`, `DELETE /:publication_id` | **Sim** | `journal_name`, `volume`, `issue`, `pages`, `publisher` |
-| `/thesis` | `GET /`, `POST /`, `PUT /:publication_id`, `DELETE /:publication_id` | **Sim** | `number_of_pages`, `organization_id` |
+| `/academic-works` | `GET /`, `POST /`, `PUT /:publication_id`, `DELETE /:publication_id` | **Sim** | `number_of_pages`, `organization_id`, `academic_work_type_id`, `defense_date` |
 | `/books` | `GET /`, `POST /`, `PUT /:publication_id`, `DELETE /:publication_id` | **Sim** | `publisher`, `edition`, `cover_photo`, `isbn`, `book_url` |
-| `/book-chapters` | `GET /`, `POST /`, `PUT /:publication_id`, `DELETE /:publication_id` | **Sim** | `book_name`, `chapter_number` |
+| `/book-chapters` | `GET /`, `POST /`, `PUT /:publication_id`, `DELETE /:publication_id` | **Sim** | `book_name`, `chapter_number`, `book_id` (opcional), `isbn` (opcional), `start_page`, `end_page` |
 
-Filtros de listagem: `title`, `page`, `take` (em `/thesis`, também `organization_id`).
+Filtros de listagem: `title`, `page`, `take` (em `/academic-works`, também `organization_id` e `academic_work_type_id`; em `/book-chapters`, também `book_id`).
+
+`defense_date` é enviado no formato `AAAA-MM-DD`. Em `/book-chapters`, `book_id` referencia o `publication_id` de um livro existente e é opcional — quando informado, a resposta traz o objeto `book` com `id`, `publisher`, `edition`, `isbn` e `publication` (com `id`, `title`, `abstract`, `publication_date` e `doi` do livro).
+
+### Tipos de trabalho acadêmico - `/academic-work-types`
+
+Tabela de referência somente leitura, populada por migration.
+
+| Rota | Auth | Filtros |
+| --- | --- | --- |
+| `GET /academic-work-types` | Não | `search`, `page`, `take` |
+
+Valores: Trabalho de Conclusão de Curso (Graduação), Monografia (Especialização), Dissertação (Mestrado), Tese (Doutorado), Tese (Livre-docência), Relatório (Pós-doutorado).
 
 > A ordem importa: crie primeiro a publicação em `/publications` e só depois a especialização, usando o `publication_id` retornado.
 

@@ -70,6 +70,7 @@ export type PublicationContributorEmbedItem = {
     description: string;
     lattes_url: string | null;
     linked_in_url: string | null;
+    instagram_url: string | null;
     profile_picture: string | null;
     member_role: { id: number; name: string };
     organization: { id: number; name: string; logo: string; address_id: number };
