@@ -1,0 +1,41 @@
+Copyright (c) 2025-2026 Diego Lucas Hattori Dallaqua. All rights reserved.
+
+NOTICE: THIS IS NOT OPEN SOURCE SOFTWARE.
+
+This repository is public only for portfolio and academic demonstration purposes. The source code being visible does not grant any license, permission, or right of use beyond what is described below.
+
+1. BACKGROUND
+
+This software is the backend API developed by Diego Lucas Hattori Dallaqua as an undergraduate thesis (Trabalho de Conclusão de Curso - TCC) for the Computer Science program at Universidade Tecnológica Federal do Paraná, for the Rede Campo research group. It provides the server-side services consumed by the companion Flutter front-end application.
+
+The Rede Campo group uses its own modified version of this software. That version is not part of this repository, and its use is governed by a separate agreement between the parties. This license does not limit or alter that agreement.
+
+2. PERMITTED USE
+
+Anyone may:
+  a) view and read the source code in this repository through the GitHub interface;
+  b) reference and cite this project in academic works, articles, or technical reviews, provided proper credit is given to the author.
+
+Forking this repository through the GitHub interface is permitted only because GitHub's Terms of Service require it. A fork grants no rights beyond those listed in this section.
+
+3. PROHIBITED USE
+
+Without the author's prior written permission, you may not:
+  a) copy, reproduce, or redistribute this software, in whole or in part;
+  b) modify, adapt, or create derivative works based on it;
+  c) use this software, in whole or in part, in any personal, academic, commercial, or institutional project;
+  d) deploy, host, or offer this software as a service, including as a backend for any application other than the original companion front-end developed by the author;
+  e) sell, sublicense, or commercially exploit this software;
+  f) remove or alter this copyright notice.
+
+4. THIRD-PARTY COMPONENTS
+
+Third-party libraries, frameworks, and other components used in this project (including but not limited to packages listed in package.json) remain under their own licenses. This license applies only to the original code written by the author.
+
+5. DISCLAIMER OF WARRANTY
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+6. CONTACT
+
+To request permission to use this software, contact: www.linkedin.com/in/diego-dallaqua

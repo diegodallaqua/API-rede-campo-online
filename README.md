@@ -100,4 +100,10 @@ Em regra, a leitura é pública e a escrita exige autenticação via JWT (`Autho
 
 ---
 
+## Licença
+
+Este repositório é público apenas para fins de portfólio e demonstração acadêmica. **Não é software open source**, uso, cópia, modificação ou redistribuição exigem permissão prévia por escrito do autor. Veja o arquivo [LICENSE](LICENSE) para os termos completos.
+
+---
+
 **© 2026 API Rede Campo Online** - Backend do site do grupo de pesquisa Rede Campo, desenvolvido com Node.js, TypeScript e arquitetura modular.
