@@ -1,6 +1,7 @@
 import { isCelebrateError } from "celebrate";
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../../../errors/AppError";
+import { toForeignKeyAppError } from "../../../errors/foreignKeyError";
 
 export function errorHandler(
   err: Error,
@@ -26,6 +27,15 @@ export function errorHandler(
     return res.status(err.statusCode).json({
       message: err.message,
       code: err.code
+    });
+  }
+
+  // Registro em uso por outro (chave estrangeira)
+  const fkError = toForeignKeyAppError(err);
+  if (fkError) {
+    return res.status(fkError.statusCode).json({
+      message: fkError.message,
+      code: fkError.code
     });
   }
 

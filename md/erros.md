@@ -80,6 +80,17 @@ QueryFailedError: Cannot delete or update a parent row: a foreign key constraint
 
 **Causa:** o registro ainda é referenciado por outro. Ex.: excluir um estado que possui cidades, ou uma publicação com contribuidores.
 
+Pela API, esse erro chega como `409` com código `RECORD_IN_USE` e uma mensagem que diz qual dependência impede a exclusão (tratado em [`src/shared/errors/foreignKeyError.ts`](../src/shared/errors/foreignKeyError.ts)):
+
+```json
+{
+  "message": "Este projeto não pode ser excluído porque existem eventos vinculados a ele. Exclua ou altere esses eventos antes de excluir o projeto.",
+  "code": "RECORD_IN_USE"
+}
+```
+
+Ao criar uma nova entidade, adicione o nome da tabela em `TABLE_LABELS` nesse arquivo. Sem isso, a API devolve uma mensagem genérica.
+
 **Solução:** remova primeiro os registros dependentes. Parte das relações já usa `ON DELETE CASCADE` (mídias e filhos de publicação, definidos nas migrations `CascadeDeleteMedia` e `CascadeDeletePublicationChildren`), mas nem todas.
 
 ---
