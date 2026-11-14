@@ -1,4 +1,5 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import { IBGE_CITIES, IBGE_STATES } from "../seeds/ibge-locations";
 
 const RESEARCH_AREAS: string[] = [
   // Agronomia / Produção Vegetal
@@ -211,56 +212,6 @@ const MEMBER_DESCRIPTION =
   "Local Development Network). Líder do grupo Rede Campo (Rede de Pesquisa, Inovação e Extensão em " +
   "Desenvolvimento Rural)";
 
-interface IbgeEstado {
-  id: number;
-  sigla: string;
-  nome: string;
-}
-
-interface IbgeMunicipio {
-  id: number;
-  nome: string;
-  microrregiao?: {
-    mesorregiao: {
-      UF: {
-        sigla: string;
-      };
-    };
-  } | null;
-  "regiao-imediata"?: {
-    "regiao-intermediaria": {
-      UF: {
-        sigla: string;
-      };
-    };
-  } | null;
-}
-
-// A API do IBGE oscila em alguns ambientes (ex.: Railway) e o fetch do Node
-// aborta a conexão após 10s. Tenta novamente com espera crescente.
-async function fetchJsonWithRetry<T>(url: string, attempts = 6): Promise<T> {
-  let lastError: unknown;
-  for (let attempt = 1; attempt <= attempts; attempt++) {
-    try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(60_000) });
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status} ao buscar ${url}`);
-      }
-      return (await res.json()) as T;
-    } catch (err) {
-      lastError = err;
-      console.warn(
-        `[seed] tentativa ${attempt}/${attempts} falhou para ${url}:`,
-        err instanceof Error ? err.message : err
-      );
-      if (attempt < attempts) {
-        await new Promise((resolve) => setTimeout(resolve, attempt * 5000));
-      }
-    }
-  }
-  throw lastError;
-}
-
 async function isEmpty(
   queryRunner: QueryRunner,
   table: string
@@ -293,29 +244,19 @@ export class SeedInitialData20260615000000 implements MigrationInterface {
       (await isEmpty(queryRunner, "city"));
 
     if (seedLocations) {
-      const estados = await fetchJsonWithRetry<IbgeEstado[]>(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
-      );
-
       const stateIdByUf: Record<string, number> = {};
-      for (const estado of estados) {
+      for (const [nome, sigla] of IBGE_STATES) {
         const result = await queryRunner.query(
           "INSERT INTO `state` (`name`) VALUES (?)",
-          [estado.nome]
+          [nome]
         );
-        stateIdByUf[estado.sigla] = result.insertId;
+        stateIdByUf[sigla] = result.insertId;
       }
 
-      const municipios = await fetchJsonWithRetry<IbgeMunicipio[]>(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
-      );
-
-      const cityRows: [number, string][] = municipios.map((m) => {
-        const sigla =
-          m.microrregiao?.mesorregiao.UF.sigla ??
-          m["regiao-imediata"]?.["regiao-intermediaria"].UF.sigla;
-        return [stateIdByUf[sigla as string], m.nome];
-      });
+      const cityRows: [number, string][] = IBGE_CITIES.map(([sigla, nome]) => [
+        stateIdByUf[sigla],
+        nome
+      ]);
 
       const chunkSize = 500;
       for (let i = 0; i < cityRows.length; i += chunkSize) {
