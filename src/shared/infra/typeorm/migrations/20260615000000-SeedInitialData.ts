@@ -236,6 +236,31 @@ interface IbgeMunicipio {
   } | null;
 }
 
+// A API do IBGE oscila em alguns ambientes (ex.: Railway) e o fetch do Node
+// aborta a conexão após 10s. Tenta novamente com espera crescente.
+async function fetchJsonWithRetry<T>(url: string, attempts = 6): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(60_000) });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} ao buscar ${url}`);
+      }
+      return (await res.json()) as T;
+    } catch (err) {
+      lastError = err;
+      console.warn(
+        `[seed] tentativa ${attempt}/${attempts} falhou para ${url}:`,
+        err instanceof Error ? err.message : err
+      );
+      if (attempt < attempts) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 5000));
+      }
+    }
+  }
+  throw lastError;
+}
+
 async function isEmpty(
   queryRunner: QueryRunner,
   table: string
@@ -268,10 +293,9 @@ export class SeedInitialData20260615000000 implements MigrationInterface {
       (await isEmpty(queryRunner, "city"));
 
     if (seedLocations) {
-      const estadosRes = await fetch(
+      const estados = await fetchJsonWithRetry<IbgeEstado[]>(
         "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
       );
-      const estados: IbgeEstado[] = await estadosRes.json();
 
       const stateIdByUf: Record<string, number> = {};
       for (const estado of estados) {
@@ -282,10 +306,9 @@ export class SeedInitialData20260615000000 implements MigrationInterface {
         stateIdByUf[estado.sigla] = result.insertId;
       }
 
-      const municipiosRes = await fetch(
+      const municipios = await fetchJsonWithRetry<IbgeMunicipio[]>(
         "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
       );
-      const municipios: IbgeMunicipio[] = await municipiosRes.json();
 
       const cityRows: [number, string][] = municipios.map((m) => {
         const sigla =
